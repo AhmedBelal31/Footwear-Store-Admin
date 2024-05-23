@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/home_screen_widgets/product_list_view_item.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,10 +13,7 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: ()
-        {
-          print("Done ") ;
-        },
+        onPressed: () {},
         child: const Icon(Icons.add),
       ),
       body: ListView.separated(
@@ -24,42 +22,11 @@ class HomeScreen extends StatelessWidget {
           return ProductListViewItem(
             productName: 'Nike a34',
             price: '400',
-            onPressed: () {
-              print('hello ! , Num : ${index + 1}');
-            },
+            onPressed: () {},
           );
         },
-        separatorBuilder: (context, index) => const SizedBox(
-          height: 8,
-        ),
+        separatorBuilder: (context, index) => const SizedBox(height: 8),
         itemCount: 18,
-      ),
-    );
-  }
-}
-
-class ProductListViewItem extends StatelessWidget {
-  final String productName;
-
-  final String price;
-
-  final void Function()? onPressed;
-
-  const ProductListViewItem({
-    super.key,
-    required this.productName,
-    required this.price,
-    this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(productName),
-      subtitle: Text('price: $price\$'),
-      trailing: IconButton(
-        onPressed: onPressed,
-        icon: const Icon(Icons.delete),
       ),
     );
   }
