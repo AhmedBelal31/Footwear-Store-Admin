@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:footwear_store_admin/screens/home_screen.dart';
+
 import 'firebase_options.dart';
+import 'presentation/screens/add_product_screen.dart';
+
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -21,13 +23,15 @@ class FootWearStore extends StatelessWidget {
       theme: ThemeData(
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+
         scaffoldBackgroundColor: Colors.white ,
-        appBarTheme: AppBarTheme(
+        appBarTheme:const  AppBarTheme(
           backgroundColor: Colors.white
         )
       ),
       debugShowCheckedModeBanner: false,
-      home:  HomeScreen(),
+      /// Navigate From Home To Add New Products .
+      home:  AddProductScreen(),
     );
   }
 }
