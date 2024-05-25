@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:footwear_store_admin/presentation/screens/home_screen.dart';
 
 import 'firebase_options.dart';
 import 'presentation/screens/add_product_screen.dart';
@@ -30,8 +31,8 @@ class FootWearStore extends StatelessWidget {
         )
       ),
       debugShowCheckedModeBanner: false,
-      /// Navigate From Home To Add New Products .
-      home:  AddProductScreen(),
+      // ? Navigate From Home To Add New Products .
+      home:  HomeScreen(),
     );
   }
 }

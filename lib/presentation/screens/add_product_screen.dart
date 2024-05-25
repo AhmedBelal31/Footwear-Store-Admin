@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footwear_store_admin/styles.dart';
 import '../controller/add_product_cubit.dart';
 import '../widgets/add_new_product_widgets/add_product_model.dart';
-import '../widgets/add_new_product_widgets/build_drop_down_button.dart';
-import '../widgets/add_new_product_widgets/custom_dropdown_button.dart';
+import '../widgets/add_new_product_widgets/brand_drop_down_btn.dart';
+import '../widgets/add_new_product_widgets/category_drop_down_btn.dart';
 import '../widgets/add_new_product_widgets/custom_text_field.dart';
+import '../widgets/add_new_product_widgets/offer_drop_down_btn.dart';
 import '../widgets/custom_snack_bar.dart';
 
 class AddProductScreen extends StatefulWidget {
@@ -43,17 +44,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> categoryItems = [
-      'Boots',
-      'Flats',
-      'Sandal',
-      'Shoes',
-      'Heals',
-      'Slippers'
-    ];
-    List<String> brandItems = ['Adidas', 'Nike', 'Crocs', 'Clarks', 'Skechers'];
-    List<String> offerItems = ['true', 'false'];
-
     return BlocProvider(
       create: (context) => AddProductCubit(),
       child: BlocConsumer<AddProductCubit, AddProductStates>(
@@ -94,12 +84,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         labelText: 'Product Name ',
                         hintText: 'Enter Your Product name',
                         controller: productNameController,
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return 'Product Name Required ';
-                          }
-                          return null;
-                        },
+                        validator: (value) => validateTextFieldInput(value,
+                            errorMsg: 'Product Name Required '),
                         autovalidateMode: autoValidateMode,
                       ),
                       CustomTextField(
@@ -107,24 +93,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         hintText: 'Enter Your Product Description',
                         maxLines: 4,
                         controller: productDescriptionController,
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return 'Product Description Required ';
-                          }
-                          return null;
-                        },
+                        validator: (value) => validateTextFieldInput(value,
+                            errorMsg: 'Product Description Required '),
                         autovalidateMode: autoValidateMode,
                       ),
                       CustomTextField(
                         labelText: 'Product Image Url ',
                         hintText: 'Enter Your Image Url',
                         controller: productImageUrlController,
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return 'Product Image Url Required ';
-                          }
-                          return null;
-                        },
+                        validator: (value) => validateTextFieldInput(value,
+                            errorMsg: 'Product Image Url Required '),
                         autovalidateMode: autoValidateMode,
                       ),
                       CustomTextField(
@@ -132,55 +110,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         hintText: 'Enter Your Product Price',
                         controller: productPriceController,
                         keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value?.isEmpty ?? true) {
-                            return 'Product Price Required ';
-                          }
-                          return null;
-                        },
+                        validator: (value) => validateTextFieldInput(value,
+                            errorMsg: 'Product Price Required '),
                         autovalidateMode: autoValidateMode,
                       ),
                       Row(
                         children: [
                           Expanded(
-                            child: Column(
-                              children: [
-                                CustomDropDownBtn(
-                                  items: categoryItems,
-                                  selectedItemText: 'Category',
-                                  onSelected: (value) {
-                                    cubit.changeDropDownButtonCategory(value);
-                                  },
-                                  selectedValue: cubit.selectedCategory,
-                                  onValueChanged: (value) {
-                                    cubit.changeDropDownButtonCategory(value);
-                                  },
-                                ),
-                                if (cubit.categoryError != null)
-                                  buildDropDownError(cubit,
-                                      errorMessage: cubit.categoryError!),
-                              ],
-                            ),
+                            child: CategoryDropDownBtn(addProductCubit: cubit),
                           ),
                           Expanded(
-                            child: Column(
-                              children: [
-                                CustomDropDownBtn(
-                                  selectedItemText: 'Brand',
-                                  items: brandItems,
-                                  onSelected: (value) {
-                                    cubit.changeDropDownButtonBrand(value);
-                                  },
-                                  selectedValue: cubit.selectedBrand,
-                                  onValueChanged: (value) {
-                                    cubit.changeDropDownButtonBrand(value);
-                                  },
-                                ),
-                                if (cubit.brandError != null)
-                                  buildDropDownError(cubit,
-                                      errorMessage: cubit.brandError!),
-                              ],
-                            ),
+                            child: BrandDropDownBtn(addProductCubit: cubit),
                           ),
                         ],
                       ),
@@ -188,24 +128,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       const Text('Offer Product ?'),
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 30),
-                        child: Column(
-                          children: [
-                            CustomDropDownBtn(
-                              selectedItemText: 'Offer ?',
-                              items: offerItems,
-                              onSelected: (value) {
-                                cubit.changeDropDownButtonOffer(value);
-                              },
-                              selectedValue: cubit.selectedOffer,
-                              onValueChanged: (value) {
-                                cubit.changeDropDownButtonOffer(value);
-                              },
-                            ),
-                            if (cubit.offerError != null)
-                              buildDropDownError(cubit,
-                                  errorMessage: cubit.offerError!),
-                          ],
-                        ),
+                        child: OfferDropDownBtn(cubit: cubit),
                       ),
                       if (state is AddProductLoadingState)
                         const Padding(
@@ -222,8 +145,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 description: productDescriptionController.text,
                                 imageUrl: productImageUrlController.text,
                                 name: productNameController.text,
-                                price: double.tryParse(
-                                    productPriceController.text)!,
+                                price: double.tryParse(productPriceController.text)!,
                               );
                             } else {
                               autoValidateMode = AutovalidateMode.always;
@@ -244,5 +166,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
         },
       ),
     );
+  }
+
+  String? validateTextFieldInput(String? value, {required String errorMsg}) {
+    if (value?.isEmpty ?? true) {
+      return errorMsg;
+    }
+    return null;
   }
 }
