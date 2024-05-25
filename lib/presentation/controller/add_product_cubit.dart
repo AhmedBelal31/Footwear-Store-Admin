@@ -1,3 +1,4 @@
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -28,13 +29,31 @@ class AddProductCubit extends Cubit<AddProductStates> {
     emit(ChangeDropDownBtnOfferValueState());
   }
 
-  void addProduct({required ProductModel productModel}) {
+  // CollectionReference productCollection = FirebaseFirestore.instance.collection('products');
+  var doc = FirebaseFirestore.instance.collection('products').doc();
+
+  void addProduct({
+
+    required String description,
+    required String imageUrl,
+    required String name,
+    required double price,
+
+  }) {
     emit(AddProductLoadingState());
-    FirebaseFirestore.instance
-        .collection('products')
-        .doc()
-        .set(productModel.toJson())
-        .then((value) {
+
+    ProductModel productModel = ProductModel(
+      id: doc.id,
+      category: selectedCategory,
+      brand: selectedBrand,
+      description: description,
+      imageUrl: imageUrl,
+      name: name,
+      price: price,
+      offer: selectedOffer == 'true' ? true : false,
+    );
+
+    doc.set(productModel.toJson()).then((value) {
       emit(AddProductSuccessState());
     }).catchError((error) {
       debugPrint('Error Is $error');
