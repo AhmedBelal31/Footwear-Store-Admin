@@ -53,7 +53,7 @@ class AddProductCubit extends Cubit<AddProductStates> {
       offer: selectedOffer == 'true' ? true : false,
     );
 
-    doc.set(productModel.toJson()).then((value) {
+    FirebaseFirestore.instance.collection('products').doc().set(productModel.toJson()).then((value) {
       emit(AddProductSuccessState());
     }).catchError((error) {
       debugPrint('Error Is $error');
