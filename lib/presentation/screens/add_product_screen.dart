@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footwear_store_admin/styles.dart';
 import '../controller/add_product_cubit.dart';
+import '../widgets/add_new_product_widgets/add_product_model.dart';
+import '../widgets/add_new_product_widgets/build_drop_down_button.dart';
 import '../widgets/add_new_product_widgets/custom_dropdown_button.dart';
 import '../widgets/add_new_product_widgets/custom_text_field.dart';
+import '../widgets/custom_snack_bar.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -19,10 +22,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   late TextEditingController productDescriptionController;
   late TextEditingController productImageUrlController;
   late TextEditingController productPriceController;
-
-  String? categoryError;
-  String? brandError;
-  String? offerError;
 
   @override
   void initState() {
@@ -42,48 +41,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
     super.dispose();
   }
 
-  bool validateDropdownSelections(AddProductCubit cubit) {
-    bool isValid = true;
-    if (cubit.selectedCategory == null) {
-      setState(() {
-        categoryError = 'Category Required';
-      });
-      isValid = false;
-    } else {
-      setState(() {
-        categoryError = null;
-      });
-    }
-
-    if (cubit.selectedBrand == null) {
-      setState(() {
-        brandError = 'Brand Required';
-      });
-      isValid = false;
-    } else {
-      setState(() {
-        brandError = null;
-      });
-    }
-
-    if (cubit.selectedOffer == null) {
-      setState(() {
-        offerError = 'Offer Required';
-      });
-      isValid = false;
-    } else {
-      setState(() {
-        offerError = null;
-      });
-    }
-
-    return isValid;
-  }
-
   @override
   Widget build(BuildContext context) {
-    List<String> categoryItems = ['Cate1', 'Cate2', 'Cate3'];
-    List<String> brandItems = ['Brand1', 'Brand2', 'Brand3'];
+    List<String> categoryItems = [
+      'Boots',
+      'Flats',
+      'Sandal',
+      'Shoes',
+      'Heals',
+      'Slippers'
+    ];
+    List<String> brandItems = ['Adidas', 'Nike', 'Crocs', 'Clarks', 'Skechers'];
     List<String> offerItems = ['true', 'false'];
 
     return BlocProvider(
@@ -91,18 +59,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
       child: BlocConsumer<AddProductCubit, AddProductStates>(
         listener: (BuildContext context, AddProductStates state) {
           if (state is AddProductSuccessState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.green,
-                content: Text('Product Add Successfully !'),
-              ),
+            customSnackBar(
+              context,
+              msg: 'Product Add Successfully !',
+              backgroundColor: Colors.green,
             );
           }
           if (state is AddProductFailureState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error , While Adding ${state.error}'),
-              ),
+            customSnackBar(
+              context,
+              msg: 'Error , While Adding ${state.error}',
+              backgroundColor: Colors.red,
             );
           }
         },
@@ -183,30 +150,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   selectedItemText: 'Category',
                                   onSelected: (value) {
                                     cubit.changeDropDownButtonCategory(value);
-                                    if (value != null) {
-                                      setState(() {
-                                        categoryError = null;
-                                      });
-                                    }
                                   },
                                   selectedValue: cubit.selectedCategory,
                                   onValueChanged: (value) {
-                                    if (value != null) {
-                                      setState(() {
-                                        categoryError = null;
-                                      });
-                                    }
+                                    cubit.changeDropDownButtonCategory(value);
                                   },
                                 ),
-                                if (categoryError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      categoryError!,
-                                      style: const TextStyle(
-                                          color: Colors.red, fontSize: 12),
-                                    ),
-                                  ),
+                                if (cubit.categoryError != null)
+                                  buildDropDownError(cubit,
+                                      errorMessage: cubit.categoryError!),
                               ],
                             ),
                           ),
@@ -218,30 +170,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   items: brandItems,
                                   onSelected: (value) {
                                     cubit.changeDropDownButtonBrand(value);
-                                    if (value != null) {
-                                      setState(() {
-                                        brandError = null;
-                                      });
-                                    }
                                   },
                                   selectedValue: cubit.selectedBrand,
                                   onValueChanged: (value) {
-                                    if (value != null) {
-                                      setState(() {
-                                        brandError = null;
-                                      });
-                                    }
+                                    cubit.changeDropDownButtonBrand(value);
                                   },
                                 ),
-                                if (brandError != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      brandError!,
-                                      style: const TextStyle(
-                                          color: Colors.red, fontSize: 12),
-                                    ),
-                                  ),
+                                if (cubit.brandError != null)
+                                  buildDropDownError(cubit,
+                                      errorMessage: cubit.brandError!),
                               ],
                             ),
                           ),
@@ -258,30 +195,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               items: offerItems,
                               onSelected: (value) {
                                 cubit.changeDropDownButtonOffer(value);
-                                if (value != null) {
-                                  setState(() {
-                                    offerError = null;
-                                  });
-                                }
                               },
                               selectedValue: cubit.selectedOffer,
                               onValueChanged: (value) {
-                                if (value != null) {
-                                  setState(() {
-                                    offerError = null;
-                                  });
-                                }
+                                cubit.changeDropDownButtonOffer(value);
                               },
                             ),
-                            if (offerError != null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Text(
-                                  offerError!,
-                                  style: const TextStyle(
-                                      color: Colors.red, fontSize: 12),
-                                ),
-                              ),
+                            if (cubit.offerError != null)
+                              buildDropDownError(cubit,
+                                  errorMessage: cubit.offerError!),
                           ],
                         ),
                       ),
@@ -292,42 +214,26 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               color: AppStyles.kPrimaryColor),
                         ),
                       if (state is! AddProductLoadingState)
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            backgroundColor: AppStyles.kPrimaryColor,
-                            foregroundColor: Colors.white,
-                          ),
+                        AddProductButton(
                           onPressed: () {
                             if (formKey.currentState!.validate() &&
-                                validateDropdownSelections(cubit)) {
+                                cubit.validateDropdownSelections()) {
                               cubit.addProduct(
                                 description: productDescriptionController.text,
                                 imageUrl: productImageUrlController.text,
                                 name: productNameController.text,
-                                price:
-                                    double.parse(productPriceController.text),
+                                price: double.tryParse(
+                                    productPriceController.text)!,
                               );
-
-                              // productDescriptionController.clear();
-                              // productPriceController.clear();
-                              // productNameController.clear();
-                              // productImageUrlController.clear();
                             } else {
                               autoValidateMode = AutovalidateMode.always;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                              customSnackBar(context,
                                   backgroundColor: Colors.red,
-                                  content: Text(
-                                      'Please fill all fields and select category, brand, and offer.'),
-                                ),
-                              );
+                                  msg:
+                                      'Please fill all fields and select category, brand, and offer.');
                               setState(() {});
                             }
                           },
-                          child: const Text('  Add Product  '),
                         ),
                     ],
                   ),

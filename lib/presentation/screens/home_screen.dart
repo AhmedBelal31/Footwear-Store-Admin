@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:footwear_store_admin/presentation/screens/add_product_screen.dart';
 import '../widgets/home_screen_widgets/product_list_view_item.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,7 +14,13 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddProductScreen(),
+            ),
+          );
+        },
         child: const Icon(Icons.add),
       ),
       body: ListView.separated(

@@ -11,12 +11,16 @@ class ChangeDropDownBtnBrandValueState extends AddProductStates {}
 
 class ChangeDropDownBtnOfferValueState extends AddProductStates {}
 
+/// Add Product States
 class AddProductLoadingState extends AddProductStates {}
-
 class AddProductSuccessState extends AddProductStates {}
-
 class AddProductFailureState extends AddProductStates {
   final String error;
 
   AddProductFailureState({required this.error});
 }
+
+
+///DropDownButtons Product Validation States
+class AddProductValidationState extends AddProductStates {}
+class AddProductValidationFailedState extends AddProductStates {}
