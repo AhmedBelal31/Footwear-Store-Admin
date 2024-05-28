@@ -24,13 +24,13 @@ class CustomSnackBar extends StatelessWidget {
         child: Container(
           margin: margin,
           decoration: BoxDecoration(
-           color: Colors.white.withOpacity(0.2),
+          color: Colors.grey.shade100.withOpacity(.9),
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade300.withOpacity(0.9),
+            color: Colors.grey.shade800.withOpacity(0.1),
             spreadRadius: 1,
-            blurRadius: 20,
+            blurRadius: 4,
             offset: const Offset(0, 10), // changes position of shadow
           ),
           ],
