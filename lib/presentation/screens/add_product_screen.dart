@@ -49,17 +49,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
       child: BlocConsumer<AddProductCubit, AddProductStates>(
         listener: (BuildContext context, AddProductStates state) {
           if (state is AddProductSuccessState) {
-            customSnackBar(
+            CustomSnackBarOverlay.show(
               context,
-              msg: 'Product Add Successfully !',
-              backgroundColor: Colors.green,
+              message: 'Success',
+              messageDescription: 'Product Add Successfully !',
+              msgColor: Colors.green,
             );
           }
           if (state is AddProductFailureState) {
-            customSnackBar(
+            CustomSnackBarOverlay.show(
               context,
-              msg: 'Error , While Adding ${state.error}',
-              backgroundColor: Colors.red,
+              message: 'Failed',
+              messageDescription: 'Error , While Adding ${state.error}',
+              msgColor: Colors.red,
             );
           }
         },
@@ -136,6 +138,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           child: CircularProgressIndicator(
                               color: AppStyles.kPrimaryColor),
                         ),
+                      ElevatedButton(
+                        onPressed: () {
+                          CustomSnackBarOverlay.show(
+                            context,
+                            message: 'Success',
+                            messageDescription: 'Product Added Successfully!',
+                            msgColor: Colors.green,
+
+                          );
+                        },
+                        child:const Text('Test'),
+                      ),
                       if (state is! AddProductLoadingState)
                         AddProductButton(
                           onPressed: () {
@@ -145,14 +159,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 description: productDescriptionController.text,
                                 imageUrl: productImageUrlController.text,
                                 name: productNameController.text,
-                                price: double.tryParse(productPriceController.text)!,
+                                price: double.tryParse(
+                                    productPriceController.text)!,
                               );
+                            resetFormFields(context);
                             } else {
                               autoValidateMode = AutovalidateMode.always;
-                              customSnackBar(context,
-                                  backgroundColor: Colors.red,
-                                  msg:
-                                      'Please fill all fields and select category, brand, and offer.');
+
+                              CustomSnackBarOverlay.show(
+                                context,
+                                message: 'Failed',
+                                messageDescription: 'Please fill all fields and select category, brand, and offer.',
+                                msgColor: Colors.red,
+                              );
                               setState(() {});
                             }
                           },
@@ -173,5 +192,27 @@ class _AddProductScreenState extends State<AddProductScreen> {
       return errorMsg;
     }
     return null;
+  }
+
+  void resetFormFields(BuildContext context) {
+    setState(() {
+      autoValidateMode = AutovalidateMode.disabled;
+
+      productNameController.clear();
+      productDescriptionController.clear();
+      productImageUrlController.clear();
+      productPriceController.clear();
+
+      var cubit = BlocProvider.of<AddProductCubit>(context);
+      cubit.selectedCategory = 'Category';
+      cubit.selectedBrand = 'Brand';
+      cubit.selectedOffer = 'Offer ?';
+
+      Future.delayed(Duration.zero, () {
+        setState(() {
+          autoValidateMode = AutovalidateMode.disabled;
+        });
+      });
+    });
   }
 }
