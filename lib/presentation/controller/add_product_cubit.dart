@@ -62,7 +62,6 @@
 //   }
 // }
 
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +79,8 @@ class AddProductCubit extends Cubit<AddProductStates> {
   String? categoryError;
   String? brandError;
   String? offerError;
+
+  List<ProductModel> products = [];
 
   void changeDropDownButtonCategory(String? value) {
     selectedCategory = value;
@@ -152,11 +153,27 @@ class AddProductCubit extends Cubit<AddProductStates> {
       offer: selectedOffer == 'true' ? true : false,
     );
 
-    FirebaseFirestore.instance.collection('products').doc().set(productModel.toJson()).then((value) {
+    FirebaseFirestore.instance
+        .collection('products')
+        .doc()
+        .set(productModel.toJson())
+        .then((value) {
       emit(AddProductSuccessState());
     }).catchError((error) {
       debugPrint('Error Is $error');
       emit(AddProductFailureState(error: error.toString()));
+    });
+  }
+
+  void fetchAllProducts() {
+    emit(GetProductLoadingState());
+    FirebaseFirestore.instance.collection('products').get().then((values) {
+      for (var element in values.docs) {
+       products.add( ProductModel.fromJson(element.data()));
+      }
+      emit(GetProductSuccessState());
+    }).catchError((error) {
+      emit(GetProductFailureState(error: error.toString()));
     });
   }
 }

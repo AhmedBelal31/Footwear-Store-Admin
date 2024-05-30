@@ -24,3 +24,13 @@ class AddProductFailureState extends AddProductStates {
 ///DropDownButtons Product Validation States
 class AddProductValidationState extends AddProductStates {}
 class AddProductValidationFailedState extends AddProductStates {}
+
+
+//Get Products
+class GetProductLoadingState extends AddProductStates {}
+class GetProductSuccessState extends AddProductStates {}
+class GetProductFailureState extends AddProductStates {
+  final String error;
+
+  GetProductFailureState({required this.error});
+}
