@@ -144,6 +144,8 @@ class AddProductCubit extends Cubit<AddProductStates> {
 
     ProductModel productModel = ProductModel(
       id: doc.id,
+       dateTime: DateTime.now().toString(),
+      // dateTime:"22/10",
       category: selectedCategory,
       brand: selectedBrand,
       description: description,
@@ -158,6 +160,7 @@ class AddProductCubit extends Cubit<AddProductStates> {
         .doc()
         .set(productModel.toJson())
         .then((value) {
+       fetchAllProducts();
       emit(AddProductSuccessState());
     }).catchError((error) {
       debugPrint('Error Is $error');
@@ -167,9 +170,14 @@ class AddProductCubit extends Cubit<AddProductStates> {
 
   void fetchAllProducts() {
     emit(GetProductLoadingState());
-    FirebaseFirestore.instance.collection('products').get().then((values) {
+    FirebaseFirestore.instance.collection('products').orderBy('dateTime').get().then((values) {
       for (var element in values.docs) {
-       products.add( ProductModel.fromJson(element.data()));
+        if (products.length != values.docs.length) {
+          print(values.docs.length);
+          products.add(ProductModel.fromJson(element.data()));
+        }
+        // products.add(ProductModel.fromJson(element.data()));
+        // print(values.docs.length);
       }
       emit(GetProductSuccessState());
     }).catchError((error) {
