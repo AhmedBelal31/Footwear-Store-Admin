@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footwear_store_admin/presentation/screens/home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'core/utils/bloc_observer.dart';
 import 'firebase_options.dart';
-import 'presentation/screens/add_product_screen.dart';
 
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +37,7 @@ class FootWearStore extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       // ? Navigate From Home To Add New Products .
-      home:  HomeScreen(),
+      home:  const HomeScreen(),
     );
   }
 }

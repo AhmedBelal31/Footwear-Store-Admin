@@ -80,7 +80,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       const Text('Add Product ',
                           style: TextStyle(
                               fontSize: 30, color: AppStyles.kPrimaryColor)),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 20),
                       CustomTextField(
                         labelText: 'Product Name ',
                         hintText: 'Enter Your Product name',
