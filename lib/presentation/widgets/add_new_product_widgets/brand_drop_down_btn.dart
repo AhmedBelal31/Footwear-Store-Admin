@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../controller/add_product_cubit.dart';
+import '../../controller/product_cubit.dart';
 import 'build_drop_down_button.dart';
 import 'custom_dropdown_button.dart';
 
@@ -9,7 +9,7 @@ class BrandDropDownBtn extends StatelessWidget {
     required this.addProductCubit,
   });
 
-  final AddProductCubit addProductCubit;
+  final ProductCubit addProductCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +27,8 @@ class BrandDropDownBtn extends StatelessWidget {
             addProductCubit.changeDropDownButtonBrand(value);
           },
         ),
-        if (addProductCubit.brandError != null)
-          buildDropDownError(addProductCubit, errorMessage: addProductCubit.brandError!),
+        // if (addProductCubit.brandError != null)
+        //   buildDropDownError(addProductCubit, errorMessage: addProductCubit.brandError!),
       ],
     );
   }

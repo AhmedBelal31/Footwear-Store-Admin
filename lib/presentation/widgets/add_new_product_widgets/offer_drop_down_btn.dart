@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../controller/add_product_cubit.dart';
+import '../../controller/product_cubit.dart';
 import 'build_drop_down_button.dart';
 import 'custom_dropdown_button.dart';
 
@@ -11,7 +11,7 @@ class OfferDropDownBtn extends StatelessWidget {
   });
 
 
-  final AddProductCubit cubit;
+  final ProductCubit cubit;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +29,9 @@ class OfferDropDownBtn extends StatelessWidget {
             cubit.changeDropDownButtonOffer(value);
           },
         ),
-        if (cubit.offerError != null)
-          buildDropDownError(cubit,
-              errorMessage: cubit.offerError!),
+        // if (cubit.offerError != null)
+        //   buildDropDownError(cubit,
+        //       errorMessage: cubit.offerError!),
       ],
     );
   }
