@@ -153,8 +153,11 @@ class ProductCubit extends Cubit<ProductStates> {
         .then((value) {
       if (value != null) {
         productImageFile = File(value.path);
-        print(value.path);
-        emit(PickImageSuccessState());
+        // emit(PickImageSuccessState());
+        uploadProductImage(); // Upload the image after picking it
+
+      } else {
+        emit(PickImageFailureState(error: 'No image selected.'));
       }
     }).catchError((error) {
       emit(PickImageFailureState(error: error));
@@ -163,24 +166,19 @@ class ProductCubit extends Cubit<ProductStates> {
 
   void uploadProductImage() {
     emit(UploadImageLoadingState());
-    if(productImageFile!=null)
-      {
-        FirebaseStorage.instance
-            .ref()
-            .child('products/${Uri.file(productImageFile!.path).pathSegments.last}')
-            .putFile(productImageFile!)
-            .then((value) {
-          value.ref.getDownloadURL().then((value) {
-            productImageUrl = value;
-            emit(UploadImageSuccessState());
-          }).catchError((error) {
-            print(error.toString());
-
-          });
-        }).catchError((error) {
-          emit(UploadImageFailureState(error: error));
-        });
-      }
-
+    FirebaseStorage.instance
+        .ref()
+        .child(
+        'products/${Uri.file(productImageFile!.path).pathSegments.last}')
+        .putFile(productImageFile!)
+        .then((value) {
+      value.ref.getDownloadURL().then((downloadUrl) {
+        productImageUrl = downloadUrl;
+        productImageUrlController.text = downloadUrl; // Update the controller
+        emit(UploadImageSuccessState());
+      }).catchError((error) {});
+    }).catchError((error) {
+      emit(UploadImageFailureState(error: error));
+    });}
   }
-}
+
