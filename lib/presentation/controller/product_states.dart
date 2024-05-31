@@ -35,11 +35,20 @@ class GetProductFailureState extends ProductStates {
   GetProductFailureState({required this.error});
 }
 
-//Delete Products
+///Delete Products
 class DeleteProductLoadingState extends ProductStates {}
 class DeleteProductSuccessState extends ProductStates {}
 class DeleteProductFailureState extends ProductStates {
   final String error;
 
   DeleteProductFailureState({required this.error});
+}
+
+///Pick Product Image
+class PickImageLoadingState extends ProductStates {}
+class PickImageSuccessState extends ProductStates {}
+class PickImageFailureState extends ProductStates
+{
+ final String error ;
+  PickImageFailureState({required this.error});
 }
