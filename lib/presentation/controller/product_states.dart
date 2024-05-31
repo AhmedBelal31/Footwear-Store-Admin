@@ -52,3 +52,12 @@ class PickImageFailureState extends ProductStates
  final String error ;
   PickImageFailureState({required this.error});
 }
+
+///Upload Product Image
+class UploadImageLoadingState extends ProductStates {}
+class UploadImageSuccessState extends ProductStates {}
+class UploadImageFailureState extends ProductStates
+{
+  final String error ;
+  UploadImageFailureState({required this.error});
+}

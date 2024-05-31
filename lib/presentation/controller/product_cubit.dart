@@ -1,17 +1,19 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:footwear_store_admin/data/models/product_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import '../../const.dart';
 
 part 'product_states.dart';
 
 class ProductCubit extends Cubit<ProductStates> {
   ProductCubit() : super(AddProductInitialState());
-
+  TextEditingController productImageUrlController = TextEditingController();
   String? selectedCategory;
   String? selectedBrand;
   String? selectedOffer;
@@ -20,6 +22,9 @@ class ProductCubit extends Cubit<ProductStates> {
   String? offerError;
 
   List<ProductModel> products = [];
+
+  File? productImageFile;
+  String? productImageUrl;
 
   void changeDropDownButtonCategory(String? value) {
     selectedCategory = value;
@@ -70,10 +75,15 @@ class ProductCubit extends Cubit<ProductStates> {
 
   void addProduct({
     required String description,
-    required String imageUrl,
+    String? imageUrl,
     required String name,
     required double price,
   }) {
+    // if ((productImageUrlController.text.isEmpty || productImageUrl == null) &&
+    //     productImageFile == null) {
+    //   emit(AddProductValidationFailedState());
+    //   return;
+    // }
     if (!validateDropdownSelections()) {
       emit(AddProductValidationFailedState());
       return;
@@ -88,7 +98,7 @@ class ProductCubit extends Cubit<ProductStates> {
       category: selectedCategory,
       brand: selectedBrand,
       description: description,
-      imageUrl: imageUrl,
+      imageUrl: imageUrl ?? (productImageUrl != null ? productImageUrl! : ""),
       name: name,
       price: price,
       offer: selectedOffer == 'true' ? true : false,
@@ -132,27 +142,44 @@ class ProductCubit extends Cubit<ProductStates> {
     });
   }
 
-   XFile? productImage;
-
   void pickProductImage() {
     emit(PickImageLoadingState());
     final ImagePicker picker = ImagePicker();
     // Pick an image.
     picker
         .pickImage(
-          source: ImageSource.gallery,
-        )
+      source: ImageSource.gallery,
+    )
         .then((value) {
-          if(value !=null)
-            {
-              productImage = value ;
-              print(value.path);
-              emit(PickImageSuccessState());
-            }
-
-    })
-        .catchError((error) {
-           emit(PickImageFailureState(error: error));
+      if (value != null) {
+        productImageFile = File(value.path);
+        print(value.path);
+        emit(PickImageSuccessState());
+      }
+    }).catchError((error) {
+      emit(PickImageFailureState(error: error));
     });
+  }
+
+  void uploadProductImage() {
+    emit(UploadImageLoadingState());
+    if(productImageFile!=null)
+      {
+        FirebaseStorage.instance
+            .ref()
+            .child('products/${Uri.file(productImageFile!.path).pathSegments.last}')
+            .putFile(productImageFile!)
+            .then((value) {
+          value.ref.getDownloadURL().then((value) {
+            productImageUrl = value;
+            emit(UploadImageSuccessState());
+          }).catchError((error) {
+            emit(UploadImageFailureState(error: error));
+          });
+        }).catchError((error) {
+          emit(UploadImageFailureState(error: error));
+        });
+      }
+
   }
 }
