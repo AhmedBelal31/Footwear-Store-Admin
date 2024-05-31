@@ -120,40 +120,45 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           children: [
-                             Container(
-                               decoration: BoxDecoration(
-                                 borderRadius: BorderRadius.circular(8.0),
-                                 boxShadow: [
-                                   BoxShadow(
-                                     color: Colors.grey.shade100.withOpacity(.6) ,
-                                     spreadRadius: 11,
-                                     blurRadius: 1 ,
-
-                                   )
-                                 ]
-                               ),
-                               child: const Text(
-                                 'Upload Your Image ',
-                                 style: TextStyle(
-                                   fontSize: 16,
-                                   fontWeight: FontWeight.w500
-                                 ),
-                               ),
-                             ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          Colors.grey.shade100.withOpacity(.6),
+                                      spreadRadius: 11,
+                                      blurRadius: 1,
+                                    )
+                                  ]),
+                              child: const Text(
+                                'Upload Your Image ',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
+                              ),
+                            ),
                             const Spacer(),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppStyles.kPrimaryColor ,
-                                foregroundColor: Colors.white ,
-                                padding: const EdgeInsets.symmetric(horizontal: 30 ,vertical: 10)
-                              ),
-                              onPressed: (){},
-                              child:const Icon(Icons.upload) ,
+                                  backgroundColor: AppStyles.kPrimaryColor,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30, vertical: 10)),
+                              onPressed: () {
+                               //  final ImagePicker picker = ImagePicker();
+                               // // Pick an image.
+                               //  final XFile? image = await picker.pickImage(
+                               //      source: ImageSource.gallery);
+                               //       // Capture a photo.
+                               //  final XFile? photo = await picker.pickImage(
+                               //      source: ImageSource.camera);
+                              },
+                              child: const Icon(Icons.upload),
                             ),
                           ],
                         ),
                       ),
-                     const SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       CustomTextField(
                         labelText: 'Product Price ',
                         hintText: 'Enter Your Product Price',
