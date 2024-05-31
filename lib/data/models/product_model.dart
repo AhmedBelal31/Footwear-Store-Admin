@@ -1,5 +1,6 @@
 class ProductModel {
-  String? id;
+  String id;
+  String dateTime;
 
   String? category;
 
@@ -17,6 +18,7 @@ class ProductModel {
 
   ProductModel({
     required this.id,
+    required this.dateTime,
     required this.category,
     required this.brand,
     required this.description,
@@ -29,6 +31,7 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
       id: json['id'],
+      dateTime: json['dateTime'],
       category: json['category'],
       brand: json['brand'],
       description: json['description'],
@@ -42,6 +45,7 @@ class ProductModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'dateTime': dateTime,
       'category': category,
       'brand': brand,
       'description': description,
