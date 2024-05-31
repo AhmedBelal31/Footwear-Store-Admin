@@ -2,16 +2,16 @@ class ProductModel {
   String id;
   String dateTime;
 
+
   String? category;
 
   String? brand;
 
   String? description;
 
-  String? imageUrl;
+  String imageUrl;
 
   String? name;
-
   double? price;
 
   bool? offer;
