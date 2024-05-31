@@ -5,7 +5,7 @@
 // import 'package:footwear_store_admin/data/models/product_model.dart';
 // import 'package:meta/meta.dart';
 //
-// part 'add_product_state.dart';
+// part 'product_states.dart';
 //
 // class AddProductCubit extends Cubit<AddProductStates> {
 //   AddProductCubit() : super(AddProductInitialState());
@@ -68,10 +68,12 @@ import 'package:flutter/material.dart';
 import 'package:footwear_store_admin/data/models/product_model.dart';
 import 'package:meta/meta.dart';
 
-part 'add_product_state.dart';
+import '../../const.dart';
 
-class AddProductCubit extends Cubit<AddProductStates> {
-  AddProductCubit() : super(AddProductInitialState());
+part 'product_states.dart';
+
+class ProductCubit extends Cubit<ProductStates> {
+  ProductCubit() : super(AddProductInitialState());
 
   String? selectedCategory;
   String? selectedBrand;
@@ -127,7 +129,7 @@ class AddProductCubit extends Cubit<AddProductStates> {
     return isValid;
   }
 
-  var doc = FirebaseFirestore.instance.collection('products').doc();
+  var doc = FirebaseFirestore.instance.collection(kProductsCollection).doc();
 
   void addProduct({
     required String description,
@@ -144,7 +146,7 @@ class AddProductCubit extends Cubit<AddProductStates> {
 
     ProductModel productModel = ProductModel(
       id: doc.id,
-       dateTime: DateTime.now().toString(),
+      dateTime: DateTime.now().toString(),
       // dateTime:"22/10",
       category: selectedCategory,
       brand: selectedBrand,
@@ -155,33 +157,41 @@ class AddProductCubit extends Cubit<AddProductStates> {
       offer: selectedOffer == 'true' ? true : false,
     );
 
-    FirebaseFirestore.instance
-        .collection('products')
-        .doc()
-        .set(productModel.toJson())
-        .then((value) {
-       fetchAllProducts();
+    doc.set(productModel.toJson()).then((value) {
       emit(AddProductSuccessState());
     }).catchError((error) {
-      debugPrint('Error Is $error');
       emit(AddProductFailureState(error: error.toString()));
     });
   }
 
   void fetchAllProducts() {
     emit(GetProductLoadingState());
-    FirebaseFirestore.instance.collection('products').orderBy('dateTime').get().then((values) {
+    FirebaseFirestore.instance
+        .collection(kProductsCollection)
+        .orderBy('dateTime')
+        .get()
+        .then((values) {
+      products.clear(); // Clear the list before adding new products
       for (var element in values.docs) {
-        if (products.length != values.docs.length) {
-          print(values.docs.length);
-          products.add(ProductModel.fromJson(element.data()));
-        }
-        // products.add(ProductModel.fromJson(element.data()));
-        // print(values.docs.length);
+        products.add(ProductModel.fromJson(element.data()));
       }
       emit(GetProductSuccessState());
     }).catchError((error) {
       emit(GetProductFailureState(error: error.toString()));
+    });
+  }
+
+  void deleteProduct({required String productId}) {
+    emit(DeleteProductLoadingState());
+    FirebaseFirestore.instance
+        .collection(kProductsCollection)
+        .doc(productId)
+        .delete()
+        .then((_) {
+      emit(DeleteProductSuccessState());
+      fetchAllProducts();
+    }).catchError((error) {
+      emit(DeleteProductFailureState(error: error));
     });
   }
 }
