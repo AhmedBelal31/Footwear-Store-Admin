@@ -102,13 +102,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         labelText: 'Product Image Url ',
                         hintText: 'Enter Your Image Url',
                         controller: cubit.productImageUrlController,
-                        validator : (value)
-                        {
-                          if (value!.isEmpty && cubit.productImageFile == null) {
-                            return 'Product Image Url Required ';
-                          }
-                          return null;
-                        } ,
+                        // validator : (value)
+                        // {
+                        //   if (value!.isEmpty && cubit.productImageFile == null) {
+                        //     return 'Product Image Url Required ';
+                        //   }
+                        //   return null;
+                        // } ,
+                        validator: (value) => validateTextFieldInput(value,
+                            errorMsg: 'Product Image Required '),
                         autovalidateMode: autoValidateMode,
                       ),
                       const SizedBox(height: 8),
@@ -155,6 +157,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           ],
                         ),
                       ),
+                      if(state is UploadImageLoadingState)
+                        const Padding(
+                          padding:  EdgeInsets.all(20),
+                          child:  LinearProgressIndicator(),
+                        ),
                       const SizedBox(height: 10),
                       CustomTextField(
                         labelText: 'Product Price ',
@@ -192,7 +199,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           onPressed: () {
                             if (formKey.currentState!.validate() &&
                                 cubit.validateDropdownSelections()) {
-                              cubit.uploadProductImage();
                               cubit.addProduct(
                                 description: productDescriptionController.text,
                                 imageUrl: cubit.productImageUrlController.text,
