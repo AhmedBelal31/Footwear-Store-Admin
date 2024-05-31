@@ -108,6 +108,52 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             errorMsg: 'Product Image Url Required '),
                         autovalidateMode: autoValidateMode,
                       ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'OR',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                             Container(
+                               decoration: BoxDecoration(
+                                 borderRadius: BorderRadius.circular(8.0),
+                                 boxShadow: [
+                                   BoxShadow(
+                                     color: Colors.grey.shade100.withOpacity(.6) ,
+                                     spreadRadius: 11,
+                                     blurRadius: 1 ,
+
+                                   )
+                                 ]
+                               ),
+                               child: const Text(
+                                 'Upload Your Image ',
+                                 style: TextStyle(
+                                   fontSize: 16,
+                                   fontWeight: FontWeight.w500
+                                 ),
+                               ),
+                             ),
+                            const Spacer(),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppStyles.kPrimaryColor ,
+                                foregroundColor: Colors.white ,
+                                padding: const EdgeInsets.symmetric(horizontal: 30 ,vertical: 10)
+                              ),
+                              onPressed: (){},
+                              child:const Icon(Icons.upload) ,
+                            ),
+                          ],
+                        ),
+                      ),
+                     const SizedBox(height: 10),
                       CustomTextField(
                         labelText: 'Product Price ',
                         hintText: 'Enter Your Product Price',
@@ -148,13 +194,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 description: productDescriptionController.text,
                                 imageUrl: productImageUrlController.text,
                                 name: productNameController.text,
-                                price: double.tryParse(productPriceController.text) ?? 200 ,
+                                price: double.tryParse(
+                                        productPriceController.text) ??
+                                    200,
                               );
                               resetFormFields(context);
                               cubit.fetchAllProducts();
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => HomeScreen(),
+                                  builder: (context) => const HomeScreen(),
                                 ),
                               );
                             } else {
