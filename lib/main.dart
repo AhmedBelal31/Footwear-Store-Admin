@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footwear_store_admin/presentation/screens/home_screen.dart';
 
+import 'core/utils/bloc_observer.dart';
 import 'firebase_options.dart';
 import 'presentation/screens/add_product_screen.dart';
 
@@ -10,6 +12,7 @@ void main()async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Bloc.observer = MyBlocObserver();
   runApp(const FootWearStore());
 }
 

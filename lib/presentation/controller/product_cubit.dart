@@ -174,7 +174,8 @@ class ProductCubit extends Cubit<ProductStates> {
             productImageUrl = value;
             emit(UploadImageSuccessState());
           }).catchError((error) {
-            emit(UploadImageFailureState(error: error));
+            print(error.toString());
+
           });
         }).catchError((error) {
           emit(UploadImageFailureState(error: error));

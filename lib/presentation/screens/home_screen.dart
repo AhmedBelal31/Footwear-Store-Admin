@@ -31,14 +31,14 @@ class HomeScreen extends StatelessWidget {
         child: BlocConsumer<ProductCubit, ProductStates>(
           listener: (context, state) {
             if(state is DeleteProductSuccessState)
-              {
-                CustomSnackBarOverlay.show(
-                  context,
-                  message: 'Deleted',
-                  messageDescription: 'Product Deleted !',
-                  msgColor: Colors.red,
-                );
-              }
+            {
+              CustomSnackBarOverlay.show(
+                context,
+                message: 'Deleted',
+                messageDescription: 'Product Deleted !',
+                msgColor: Colors.red,
+              );
+            }
           },
           builder: (context, state) {
             var cubit = BlocProvider.of<ProductCubit>(context);
@@ -46,28 +46,45 @@ class HomeScreen extends StatelessWidget {
               return const Center(child: Text('There Is No Products '));
             }
             else
-              {
-                if (state is GetProductFailureState) {
+            {
+              if (state is GetProductFailureState ) {
+                return Text('Error: ${state.error}');
+              }
+              else if (state is DeleteProductFailureState)
+                {
                   return Text('Error: ${state.error}');
                 }
-                else if (state is GetProductSuccessState ||
-                    state is AddProductSuccessState ||
-                    state is DeleteProductSuccessState ) {
-                  return ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return ProductListViewItem(
-                        product: cubit.products[index],
-                      );
-                    },
-                    separatorBuilder: (context, index) => const SizedBox(height: 8),
-                    itemCount: cubit.products.length,
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
+              else {
+                return Column(
+                  children: [
+                    if(state is DeleteProductLoadingState)
+                      const Padding(
+                      padding:  EdgeInsets.all(20),
+                      child:  LinearProgressIndicator(),
+                    ),
+                    Expanded(
+                      child: RefreshIndicator(
+                        onRefresh:()async
+                        {
+                          cubit.fetchAllProducts();
+                        },
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return ProductListViewItem(
+                              product: cubit.products[index],
+                            );
+                          },
+                          separatorBuilder: (context, index) => const SizedBox(height: 8),
+                          itemCount: cubit.products.length,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
               }
+
+            }
 
 
           },
@@ -78,3 +95,16 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

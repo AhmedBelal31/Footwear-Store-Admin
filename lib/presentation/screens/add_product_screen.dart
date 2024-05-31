@@ -102,9 +102,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         labelText: 'Product Image Url ',
                         hintText: 'Enter Your Image Url',
                         controller: cubit.productImageUrlController,
-                        // validator: (value) => validateTextFieldInput(value,
-                        //     errorMsg: 'Product Image Url Required '),
-
                         validator : (value)
                         {
                           if (value!.isEmpty && cubit.productImageFile == null) {
@@ -155,13 +152,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               },
                               child: const Icon(Icons.upload),
                             ),
-                            IconButton(
-                              onPressed: ()
-                              {
-                                cubit.uploadProductImage();
-                              },
-                              icon: const Icon(Icons.upload_file),
-                            ),
                           ],
                         ),
                       ),
@@ -202,6 +192,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           onPressed: () {
                             if (formKey.currentState!.validate() &&
                                 cubit.validateDropdownSelections()) {
+                              cubit.uploadProductImage();
                               cubit.addProduct(
                                 description: productDescriptionController.text,
                                 imageUrl: cubit.productImageUrlController.text,
