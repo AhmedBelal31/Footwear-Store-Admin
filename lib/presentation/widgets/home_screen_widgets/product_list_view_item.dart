@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:footwear_store_admin/data/models/product_model.dart';
+import 'package:footwear_store_admin/presentation/controller/product_cubit.dart';
 
 class ProductListViewItem extends StatelessWidget {
-  final String productName;
+  final ProductModel product;
 
-  final String price;
-
-  final void Function()? onPressed;
 
   const ProductListViewItem({
     super.key,
-    required this.productName,
-    required this.price,
-    this.onPressed,
+    required this.product,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(productName),
-      subtitle: Text('price: $price\$'),
+      title: Text(product.name ?? ''),
+      subtitle: Text('price: ${product.price}\$'),
       trailing: IconButton(
-        onPressed: onPressed,
-        icon: const Icon(Icons.delete),
+        onPressed: () {
+          BlocProvider.of<ProductCubit>(context).deleteProduct(productId: product.id);
+
+        },
+        icon:const Icon(Icons.delete),
       ),
     );
   }

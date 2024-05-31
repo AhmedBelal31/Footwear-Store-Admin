@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:footwear_store_admin/presentation/screens/home_screen.dart';
 import 'package:footwear_store_admin/styles.dart';
-import '../controller/add_product_cubit.dart';
+import '../controller/product_cubit.dart';
 import '../widgets/add_new_product_widgets/add_product_model.dart';
 import '../widgets/add_new_product_widgets/brand_drop_down_btn.dart';
 import '../widgets/add_new_product_widgets/category_drop_down_btn.dart';
@@ -45,9 +46,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AddProductCubit(),
-      child: BlocConsumer<AddProductCubit, AddProductStates>(
-        listener: (BuildContext context, AddProductStates state) {
+      create: (context) => ProductCubit(),
+      child: BlocConsumer<ProductCubit, ProductStates>(
+        listener: (BuildContext context, ProductStates state) {
           if (state is AddProductSuccessState) {
             CustomSnackBarOverlay.show(
               context,
@@ -66,7 +67,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
           }
         },
         builder: (context, state) {
-          var cubit = BlocProvider.of<AddProductCubit>(context);
+          var cubit = BlocProvider.of<ProductCubit>(context);
           return Scaffold(
             body: SingleChildScrollView(
               child: Form(
@@ -118,10 +119,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                       Row(
                         children: [
-                          Expanded(
+                          Flexible(
                             child: CategoryDropDownBtn(addProductCubit: cubit),
                           ),
-                          Expanded(
+                          Flexible(
                             child: BrandDropDownBtn(addProductCubit: cubit),
                           ),
                         ],
@@ -138,18 +139,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           child: CircularProgressIndicator(
                               color: AppStyles.kPrimaryColor),
                         ),
-                      ElevatedButton(
-                        onPressed: () {
-                          CustomSnackBarOverlay.show(
-                            context,
-                            message: 'Success',
-                            messageDescription: 'Product Added Successfully!',
-                            msgColor: Colors.green,
-
-                          );
-                        },
-                        child:const Text('Test'),
-                      ),
                       if (state is! AddProductLoadingState)
                         AddProductButton(
                           onPressed: () {
@@ -159,17 +148,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 description: productDescriptionController.text,
                                 imageUrl: productImageUrlController.text,
                                 name: productNameController.text,
-                                price: double.tryParse(
-                                    productPriceController.text)!,
+                                price: double.tryParse(productPriceController.text) ?? 200 ,
                               );
-                            resetFormFields(context);
+                              resetFormFields(context);
+                              cubit.fetchAllProducts();
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => HomeScreen(),
+                                ),
+                              );
                             } else {
                               autoValidateMode = AutovalidateMode.always;
 
                               CustomSnackBarOverlay.show(
                                 context,
                                 message: 'Failed',
-                                messageDescription: 'Please fill all fields and select category, brand, and offer.',
+                                messageDescription:
+                                    'Please fill all fields and select category, brand, and offer.',
                                 msgColor: Colors.red,
                               );
                               setState(() {});
@@ -203,7 +198,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       productImageUrlController.clear();
       productPriceController.clear();
 
-      var cubit = BlocProvider.of<AddProductCubit>(context);
+      var cubit = BlocProvider.of<ProductCubit>(context);
       cubit.selectedCategory = 'Category';
       cubit.selectedBrand = 'Brand';
       cubit.selectedOffer = 'Offer ?';
