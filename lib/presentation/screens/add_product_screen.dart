@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footwear_store_admin/presentation/screens/home_screen.dart';
 import 'package:footwear_store_admin/styles.dart';
+import 'package:image_picker/image_picker.dart';
 import '../controller/product_cubit.dart';
 import '../widgets/add_new_product_widgets/add_product_model.dart';
 import '../widgets/add_new_product_widgets/brand_drop_down_btn.dart';
@@ -22,14 +23,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
   AutovalidateMode autoValidateMode = AutovalidateMode.disabled;
   late TextEditingController productNameController;
   late TextEditingController productDescriptionController;
-  late TextEditingController productImageUrlController;
   late TextEditingController productPriceController;
 
   @override
   void initState() {
     productNameController = TextEditingController();
     productDescriptionController = TextEditingController();
-    productImageUrlController = TextEditingController();
     productPriceController = TextEditingController();
     super.initState();
   }
@@ -38,7 +37,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   void dispose() {
     productNameController.dispose();
     productDescriptionController.dispose();
-    productImageUrlController.dispose();
     productPriceController.dispose();
     super.dispose();
   }
@@ -103,9 +101,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       CustomTextField(
                         labelText: 'Product Image Url ',
                         hintText: 'Enter Your Image Url',
-                        controller: productImageUrlController,
-                        validator: (value) => validateTextFieldInput(value,
-                            errorMsg: 'Product Image Url Required '),
+                        controller: cubit.productImageUrlController,
+                        // validator: (value) => validateTextFieldInput(value,
+                        //     errorMsg: 'Product Image Url Required '),
+
+                        validator : (value)
+                        {
+                          if (value!.isEmpty && cubit.productImageFile == null) {
+                            return 'Product Image Url Required ';
+                          }
+                          return null;
+                        } ,
                         autovalidateMode: autoValidateMode,
                       ),
                       const SizedBox(height: 8),
@@ -145,15 +151,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 30, vertical: 10)),
                               onPressed: () {
-                               //  final ImagePicker picker = ImagePicker();
-                               // // Pick an image.
-                               //  final XFile? image = await picker.pickImage(
-                               //      source: ImageSource.gallery);
-                               //       // Capture a photo.
-                               //  final XFile? photo = await picker.pickImage(
-                               //      source: ImageSource.camera);
+                                cubit.pickProductImage();
                               },
                               child: const Icon(Icons.upload),
+                            ),
+                            IconButton(
+                              onPressed: ()
+                              {
+                                cubit.uploadProductImage();
+                              },
+                              icon: const Icon(Icons.upload_file),
                             ),
                           ],
                         ),
@@ -197,13 +204,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 cubit.validateDropdownSelections()) {
                               cubit.addProduct(
                                 description: productDescriptionController.text,
-                                imageUrl: productImageUrlController.text,
+                                imageUrl: cubit.productImageUrlController.text,
                                 name: productNameController.text,
                                 price: double.tryParse(
                                         productPriceController.text) ??
                                     200,
                               );
-                              resetFormFields(context);
+                              resetFormFields(context );
                               cubit.fetchAllProducts();
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
@@ -242,16 +249,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
     return null;
   }
 
-  void resetFormFields(BuildContext context) {
+  void resetFormFields(BuildContext context ) {
+    var cubit = BlocProvider.of<ProductCubit>(context);
     setState(() {
       autoValidateMode = AutovalidateMode.disabled;
 
       productNameController.clear();
       productDescriptionController.clear();
-      productImageUrlController.clear();
+      cubit.productImageUrlController.clear();
       productPriceController.clear();
-
-      var cubit = BlocProvider.of<ProductCubit>(context);
       cubit.selectedCategory = 'Category';
       cubit.selectedBrand = 'Brand';
       cubit.selectedOffer = 'Offer ?';
