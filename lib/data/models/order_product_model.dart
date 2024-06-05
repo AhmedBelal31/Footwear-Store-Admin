@@ -9,6 +9,7 @@ class OrderProductModel {
   final String productCategory;
   final String productBrand;
   final String productImageUrl;
+  final String description;
 
   const OrderProductModel({
     required this.address,
@@ -21,6 +22,7 @@ class OrderProductModel {
     required this.productCategory,
     required this.productBrand,
     required this.productImageUrl,
+    required this.description,
   });
 
   factory OrderProductModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class OrderProductModel {
       productCategory: json['productCategory'],
       productBrand: json['productBrand'],
       productImageUrl: json['productImageUrl'],
+      description: json['description'],
     );
   }
 
@@ -50,6 +53,7 @@ class OrderProductModel {
       'productCategory': productCategory,
       'productBrand': productBrand,
       'productImageUrl': productImageUrl,
+      'description': description,
     };
   }
 
@@ -64,6 +68,7 @@ class OrderProductModel {
     String? productCategory,
     String? productBrand,
     String? productImageUrl,
+    String? description,
   }) {
     return OrderProductModel(
       address: address ?? this.address,
@@ -76,6 +81,8 @@ class OrderProductModel {
       productCategory: productCategory ?? this.productCategory,
       productBrand: productBrand ?? this.productBrand,
       productImageUrl: productImageUrl ?? this.productImageUrl,
+      description: description ?? this.description,
+
     );
   }
 }

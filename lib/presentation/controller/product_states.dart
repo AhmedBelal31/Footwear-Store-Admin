@@ -61,3 +61,13 @@ class UploadImageFailureState extends ProductStates
   final String error ;
   UploadImageFailureState({required this.error});
 }
+
+
+///Get Orders
+class GetOrdersLoadingState extends ProductStates {}
+class GetOrdersSuccessState extends ProductStates {}
+class GetOrdersFailureState extends ProductStates
+{
+  final String error ;
+  GetOrdersFailureState({required this.error});
+}

@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../../const.dart';
+import '../../data/models/order_product_model.dart';
 
 part 'product_states.dart';
 
@@ -155,7 +156,6 @@ class ProductCubit extends Cubit<ProductStates> {
         productImageFile = File(value.path);
         // emit(PickImageSuccessState());
         uploadProductImage(); // Upload the image after picking it
-
       } else {
         emit(PickImageFailureState(error: 'No image selected.'));
       }
@@ -168,8 +168,7 @@ class ProductCubit extends Cubit<ProductStates> {
     emit(UploadImageLoadingState());
     FirebaseStorage.instance
         .ref()
-        .child(
-        'products/${Uri.file(productImageFile!.path).pathSegments.last}')
+        .child('products/${Uri.file(productImageFile!.path).pathSegments.last}')
         .putFile(productImageFile!)
         .then((value) {
       value.ref.getDownloadURL().then((downloadUrl) {
@@ -179,6 +178,27 @@ class ProductCubit extends Cubit<ProductStates> {
       }).catchError((error) {});
     }).catchError((error) {
       emit(UploadImageFailureState(error: error));
-    });}
+    });
   }
 
+  List<OrderProductModel> orders = [];
+
+  void getOrders() {
+    emit(GetOrdersLoadingState());
+    FirebaseFirestore.instance
+        .collection(kOrdersCollection)
+        .get()
+        .then((values) {
+      orders.clear();
+      orders.addAll(
+        values.docs
+            .map((element) => OrderProductModel.fromJson(element.data()))
+            .toList(),
+      );
+
+      emit(GetProductSuccessState());
+    }).catchError((error) {
+      emit(GetProductFailureState(error: error));
+    });
+  }
+}
