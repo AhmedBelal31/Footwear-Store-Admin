@@ -831,7 +831,7 @@ class _ProductOrderListViewItemState extends State<ProductOrderListViewItem> {
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: isChecked ? Colors.green : Colors.white,
+                color: isChecked ? Colors.green[300] : Colors.white,
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: Row(
@@ -923,3 +923,7 @@ class _ProductOrderListViewItemState extends State<ProductOrderListViewItem> {
     );
   }
 }
+
+
+
+
