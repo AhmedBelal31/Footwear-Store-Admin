@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -96,8 +95,8 @@ class ProductCubit extends Cubit<ProductStates> {
       id: doc.id,
       dateTime: DateTime.now().toString(),
       // dateTime:"22/10",
-      category: selectedCategory,
-      brand: selectedBrand,
+      category: selectedCategory!,
+      brand: selectedBrand!,
       description: description,
       imageUrl: imageUrl ?? (productImageUrl != null ? productImageUrl! : ""),
       name: name,
@@ -123,7 +122,8 @@ class ProductCubit extends Cubit<ProductStates> {
       for (var element in values.docs) {
         products.add(ProductModel.fromJson(element.data()));
       }
-      emit(GetProductSuccessState());
+       emit(GetProductSuccessState());
+
     }).catchError((error) {
       emit(GetProductFailureState(error: error.toString()));
     });
@@ -139,7 +139,7 @@ class ProductCubit extends Cubit<ProductStates> {
       emit(DeleteProductSuccessState());
       fetchAllProducts();
     }).catchError((error) {
-      emit(DeleteProductFailureState(error: error));
+      emit(DeleteProductFailureState(error: error.toString()));
     });
   }
 
@@ -160,7 +160,7 @@ class ProductCubit extends Cubit<ProductStates> {
         emit(PickImageFailureState(error: 'No image selected.'));
       }
     }).catchError((error) {
-      emit(PickImageFailureState(error: error));
+      emit(PickImageFailureState(error: error.toString()));
     });
   }
 
@@ -177,7 +177,7 @@ class ProductCubit extends Cubit<ProductStates> {
         emit(UploadImageSuccessState());
       }).catchError((error) {});
     }).catchError((error) {
-      emit(UploadImageFailureState(error: error));
+      emit(UploadImageFailureState(error: error.toString()));
     });
   }
 
@@ -196,9 +196,22 @@ class ProductCubit extends Cubit<ProductStates> {
             .toList(),
       );
 
-      emit(GetProductSuccessState());
+      emit(GetOrdersSuccessState());
     }).catchError((error) {
-      emit(GetProductFailureState(error: error));
+      emit(GetProductFailureState(error: error.toString()));
+    });
+  }
+
+  void updateOrderStatusValue(
+      {required String orderID, required bool isShipped}) {
+    emit(ChangeOrderStatusLoadingState());
+    FirebaseFirestore.instance
+        .collection(kOrdersCollection)
+        .doc(orderID)
+        .update({'isShipped': isShipped}).then((_) {
+      emit(ChangeOrderStatusSuccessState());
+    }).catchError((error) {
+      emit(ChangeOrderStatusFailureState(error: error.toString()));
     });
   }
 }
