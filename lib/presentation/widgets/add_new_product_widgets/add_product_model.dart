@@ -3,10 +3,12 @@ import '../../../styles.dart';
 
 class AddProductButton extends StatelessWidget {
   final void Function()? onPressed;
+  final String text;
 
   const AddProductButton({
     super.key,
-    this.onPressed,
+    this.onPressed, required this.text,
+
   });
 
   @override
@@ -20,7 +22,7 @@ class AddProductButton extends StatelessWidget {
         foregroundColor: Colors.white,
       ),
       onPressed: onPressed,
-      child: const Text('  Add Product  '),
+      child: Text(text),
     );
   }
 }
