@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:footwear_store_admin/data/models/product_model.dart';
 
 import '../../controller/product_cubit.dart';
 import 'build_drop_down_button.dart';
 import 'custom_dropdown_button.dart';
 
 class CategoryDropDownBtn extends StatelessWidget {
-  const CategoryDropDownBtn({
+   CategoryDropDownBtn({
     super.key,
     required this.addProductCubit,
+    this.product
   });
 
   final ProductCubit addProductCubit;
+  ProductModel? product ;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,7 @@ class CategoryDropDownBtn extends StatelessWidget {
       children: [
         CustomDropDownBtn(
           items: categoryItems,
-          selectedItemText: 'Category',
+          selectedItemText:product?.category ?? 'Category',
           onSelected: (value) {
             addProductCubit.changeDropDownButtonCategory(value);
           },
