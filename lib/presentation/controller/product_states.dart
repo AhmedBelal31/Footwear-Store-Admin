@@ -13,22 +13,25 @@ class ChangeDropDownBtnOfferValueState extends ProductStates {}
 
 /// Add Product States
 class AddProductLoadingState extends ProductStates {}
+
 class AddProductSuccessState extends ProductStates {}
+
 class AddProductFailureState extends ProductStates {
   final String error;
 
   AddProductFailureState({required this.error});
 }
 
-
 ///DropDownButtons Product Validation States
 class AddProductValidationState extends ProductStates {}
-class AddProductValidationFailedState extends ProductStates {}
 
+class AddProductValidationFailedState extends ProductStates {}
 
 //Get Products
 class GetProductLoadingState extends ProductStates {}
+
 class GetProductSuccessState extends ProductStates {}
+
 class GetProductFailureState extends ProductStates {
   final String error;
 
@@ -37,7 +40,9 @@ class GetProductFailureState extends ProductStates {
 
 ///Delete Products
 class DeleteProductLoadingState extends ProductStates {}
+
 class DeleteProductSuccessState extends ProductStates {}
+
 class DeleteProductFailureState extends ProductStates {
   final String error;
 
@@ -46,28 +51,44 @@ class DeleteProductFailureState extends ProductStates {
 
 ///Pick Product Image
 class PickImageLoadingState extends ProductStates {}
+
 class PickImageSuccessState extends ProductStates {}
-class PickImageFailureState extends ProductStates
-{
- final String error ;
+
+class PickImageFailureState extends ProductStates {
+  final String error;
+
   PickImageFailureState({required this.error});
 }
 
 ///Upload Product Image
 class UploadImageLoadingState extends ProductStates {}
+
 class UploadImageSuccessState extends ProductStates {}
-class UploadImageFailureState extends ProductStates
-{
-  final String error ;
+
+class UploadImageFailureState extends ProductStates {
+  final String error;
+
   UploadImageFailureState({required this.error});
 }
 
-
 ///Get Orders
 class GetOrdersLoadingState extends ProductStates {}
+
 class GetOrdersSuccessState extends ProductStates {}
-class GetOrdersFailureState extends ProductStates
-{
-  final String error ;
+
+class GetOrdersFailureState extends ProductStates {
+  final String error;
+
   GetOrdersFailureState({required this.error});
+}
+
+///Update Order Status
+class ChangeOrderStatusLoadingState extends ProductStates {}
+
+class ChangeOrderStatusSuccessState extends ProductStates {}
+
+class ChangeOrderStatusFailureState extends ProductStates {
+  final String error;
+
+  ChangeOrderStatusFailureState({required this.error});
 }
