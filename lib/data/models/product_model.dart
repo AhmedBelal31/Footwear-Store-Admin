@@ -3,18 +3,18 @@ class ProductModel {
   String dateTime;
 
 
-  String? category;
+  String category;
 
-  String? brand;
+  String brand;
 
-  String? description;
+  String description;
 
-  String imageUrl;
+  String? imageUrl;
 
-  String? name;
-  double? price;
+  String name;
+  double price;
 
-  bool? offer;
+  bool offer;
 
   ProductModel({
     required this.id,
