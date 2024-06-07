@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:footwear_store_admin/presentation/screens/edit_product_screen.dart';
 import 'package:footwear_store_admin/presentation/widgets/home_screen_widgets/product_offer_and_price.dart';
 import 'package:footwear_store_admin/presentation/widgets/home_screen_widgets/products_grid_view_banner.dart';
 import '../../../data/models/product_model.dart';
@@ -16,13 +17,11 @@ class HomeProductsGridViewItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => ProductDetailsScreen(
-        //         product: product
-        //     ),
-        //   ),
-        // );
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => EditProductScreen(product: product),
+          ),
+        );
       },
       child: Container(
         // elevation:8,
