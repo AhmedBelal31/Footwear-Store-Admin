@@ -2,7 +2,6 @@ class ProductModel {
   String id;
   String dateTime;
 
-
   String category;
 
   String brand;
@@ -39,6 +38,30 @@ class ProductModel {
       name: json['name'],
       price: json['price'],
       offer: json['offer'],
+    );
+  }
+
+  ProductModel copyWith({
+    String? id,
+    String? name,
+    double? price,
+    String? dateTime,
+    String? description,
+    String? imageUrl,
+    String? category,
+    String? brand,
+    bool? offer,
+  }) {
+    return ProductModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      price: price ?? this.price,
+      dateTime: dateTime ?? this.dateTime,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      category: category ?? this.category,
+      brand: brand ?? this.brand,
+      offer: offer ?? this.offer,
     );
   }
 
