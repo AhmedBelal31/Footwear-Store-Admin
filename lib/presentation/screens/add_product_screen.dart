@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footwear_store_admin/presentation/screens/home_screen.dart';
 import 'package:footwear_store_admin/styles.dart';
-import 'package:image_picker/image_picker.dart';
 import '../controller/product_cubit.dart';
-import '../widgets/add_new_product_widgets/add_product_model.dart';
+import '../widgets/custom_button.dart';
 import '../widgets/add_new_product_widgets/brand_drop_down_btn.dart';
 import '../widgets/add_new_product_widgets/category_drop_down_btn.dart';
 import '../widgets/add_new_product_widgets/custom_text_field.dart';
@@ -67,6 +66,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         builder: (context, state) {
           var cubit = BlocProvider.of<ProductCubit>(context);
           return Scaffold(
+            appBar: AppBar(),
             body: SingleChildScrollView(
               child: Form(
                 key: formKey,
@@ -76,10 +76,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 60),
-                      const Text('Add Product ',
-                          style: TextStyle(
-                              fontSize: 30, color: AppStyles.kPrimaryColor)),
+                      const Text(
+                        'Add Product ',
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: AppStyles.kPrimaryColor,
+                        ),
+                      ),
                       const SizedBox(height: 20),
                       CustomTextField(
                         labelText: 'Product Name ',
@@ -157,10 +160,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           ],
                         ),
                       ),
-                      if(state is UploadImageLoadingState)
+                      if (state is UploadImageLoadingState)
                         const Padding(
-                          padding:  EdgeInsets.all(20),
-                          child:  LinearProgressIndicator(),
+                          padding: EdgeInsets.all(20),
+                          child: LinearProgressIndicator(),
                         ),
                       const SizedBox(height: 10),
                       CustomTextField(
@@ -175,7 +178,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       Row(
                         children: [
                           Flexible(
-                            child: CategoryDropDownBtn(addProductCubit: cubit),
+                            child: CategoryDropDownBtn(
+                              addProductCubit: cubit,
+                            ),
                           ),
                           Flexible(
                             child: BrandDropDownBtn(addProductCubit: cubit),
@@ -195,7 +200,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               color: AppStyles.kPrimaryColor),
                         ),
                       if (state is! AddProductLoadingState)
-                        AddProductButton(
+                        CustomButton(
                           onPressed: () {
                             if (formKey.currentState!.validate() &&
                                 cubit.validateDropdownSelections()) {
@@ -207,7 +212,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         productPriceController.text) ??
                                     200,
                               );
-                              resetFormFields(context );
+                              resetFormFields(context);
                               cubit.fetchAllProducts();
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
@@ -227,6 +232,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               setState(() {});
                             }
                           },
+                          text: '  Add Product  ',
                         ),
                     ],
                   ),
@@ -246,7 +252,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     return null;
   }
 
-  void resetFormFields(BuildContext context ) {
+  void resetFormFields(BuildContext context) {
     var cubit = BlocProvider.of<ProductCubit>(context);
     setState(() {
       autoValidateMode = AutovalidateMode.disabled;
