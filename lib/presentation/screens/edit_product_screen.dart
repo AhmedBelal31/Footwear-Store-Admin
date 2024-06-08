@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footwear_store_admin/data/models/product_model.dart';
+import 'package:footwear_store_admin/main.dart';
 import 'package:footwear_store_admin/presentation/screens/home_screen.dart';
 import 'package:footwear_store_admin/styles.dart';
 import '../controller/product_cubit.dart';
-import '../widgets/add_new_product_widgets/add_product_model.dart';
+import '../widgets/custom_button.dart';
 import '../widgets/add_new_product_widgets/brand_drop_down_btn.dart';
 import '../widgets/add_new_product_widgets/category_drop_down_btn.dart';
 import '../widgets/add_new_product_widgets/custom_text_field.dart';
@@ -30,6 +31,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void initState() {
     var cubit = BlocProvider.of<ProductCubit>(context);
+    BlocProvider.of<ProductCubit>(context).fetchAllProducts();
     productNameController = TextEditingController();
     productDescriptionController = TextEditingController();
     productPriceController = TextEditingController();
@@ -52,24 +54,29 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocProvider(
       create: (context) => ProductCubit(),
       child: BlocConsumer<ProductCubit, ProductStates>(
         listener: (BuildContext context, ProductStates state) {
-          if (state is AddProductSuccessState) {
+          if (state is UpdateProductsSuccessState) {
             CustomSnackBarOverlay.show(
               context,
               message: 'Success',
-              messageDescription: 'Product Add Successfully !',
+              messageDescription: 'Product Updated Successfully !',
               msgColor: Colors.green,
             );
+            resetFormFields(context);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const HomeScreen(),
+              ),
+            );
           }
-          if (state is AddProductFailureState) {
+          if (state is UpdateProductsFailureState) {
             CustomSnackBarOverlay.show(
               context,
               message: 'Failed',
-              messageDescription: 'Error , While Adding ${state.error}',
+              messageDescription: 'Error , While Update ${state.error}',
               msgColor: Colors.red,
             );
           }
@@ -209,38 +216,52 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         padding: const EdgeInsets.only(top: 10, bottom: 30),
                         child: OfferDropDownBtn(
                           cubit: cubit,
-                         product:  widget.product,
+                          product: widget.product,
                         ),
                       ),
-                      if (state is AddProductLoadingState)
+                      if (state is UpdateProductsLoadingState)
                         const Padding(
                           padding: EdgeInsets.only(top: 30),
                           child: CircularProgressIndicator(
                               color: AppStyles.kPrimaryColor),
                         ),
-                      if (state is! AddProductLoadingState)
-                        AddProductButton(
+                      if (state is! UpdateProductsLoadingState)
+                        CustomButton(
                           onPressed: () {
-                            if (formKey.currentState!.validate() &&
-                                cubit.validateDropdownSelections()) {
-                              cubit.addProduct(
-                                description: productDescriptionController.text,
-                                imageUrl: cubit.productImageUrlController.text,
+                            if (formKey.currentState!.validate()) {
+                              // ProductModel updatedProduct =
+                              //     widget.product.copyWith(
+                              //   name: productNameController.text,
+                              //   description: productDescriptionController.text,
+                              //   price: double.tryParse(
+                              //       productPriceController.text),
+                              //   imageUrl: cubit.productImageUrlController.text,
+                              //   category: cubit.selectedCategory,
+                              //   brand: cubit.selectedBrand,
+                              //   offer: cubit.selectedOffer == 'true',
+                              // );
+
+                              ProductModel updatedProduct =
+                                  widget.product.copyWith(
                                 name: productNameController.text,
+                                description: productDescriptionController.text,
                                 price: double.tryParse(
-                                        productPriceController.text) ??
-                                    200,
+                                    productPriceController.text),
+                                imageUrl: cubit.productImageUrlController.text,
+                                category: cubit.selectedCategory,
+                                brand: cubit.selectedBrand,
+                                offer: cubit.selectedOffer == 'true',
                               );
-                              resetFormFields(context);
-                              cubit.fetchAllProducts();
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => const HomeScreen(),
-                                ),
+
+
+                              cubit.updateProduct(
+                                productID: widget.product.id,
+                                originalProduct: widget.product,
+                                updatedProduct: updatedProduct,
                               );
+
                             } else {
                               autoValidateMode = AutovalidateMode.always;
-
                               CustomSnackBarOverlay.show(
                                 context,
                                 message: 'Failed',
@@ -252,7 +273,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             }
                           },
                           text: '  Update Product  ',
-                        ),
+                        )
                     ],
                   ),
                 ),
