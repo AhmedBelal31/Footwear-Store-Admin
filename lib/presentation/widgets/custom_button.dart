@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../styles.dart';
+import '../../styles.dart';
 
-class AddProductButton extends StatelessWidget {
+class CustomButton extends StatelessWidget {
   final void Function()? onPressed;
   final String text;
 
-  const AddProductButton({
+  const CustomButton({
     super.key,
     this.onPressed, required this.text,
 
@@ -16,7 +16,7 @@ class AddProductButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(14.0),
         ),
         backgroundColor: AppStyles.kPrimaryColor,
         foregroundColor: Colors.white,
