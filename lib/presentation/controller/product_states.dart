@@ -92,3 +92,18 @@ class ChangeOrderStatusFailureState extends ProductStates {
 
   ChangeOrderStatusFailureState({required this.error});
 }
+
+
+///Update Products
+class UpdateProductsLoadingState extends ProductStates {}
+
+class UpdateProductsSuccessState extends ProductStates {
+  final List<ProductModel> products ;
+  UpdateProductsSuccessState({required this.products});
+}
+
+class UpdateProductsFailureState extends ProductStates {
+  final String error;
+
+  UpdateProductsFailureState({required this.error});
+}

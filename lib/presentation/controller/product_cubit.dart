@@ -8,7 +8,6 @@ import 'package:meta/meta.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../../const.dart';
 import '../../data/models/order_product_model.dart';
-
 part 'product_states.dart';
 
 class ProductCubit extends Cubit<ProductStates> {
@@ -20,8 +19,6 @@ class ProductCubit extends Cubit<ProductStates> {
   String? categoryError;
   String? brandError;
   String? offerError;
-
-  List<ProductModel> products = [];
 
   File? productImageFile;
   String? productImageUrl;
@@ -111,7 +108,7 @@ class ProductCubit extends Cubit<ProductStates> {
     });
   }
 
-  void fetchAllProducts() {
+  void fetchAllProducts()  {
     emit(GetProductLoadingState());
     FirebaseFirestore.instance
         .collection(kProductsCollection)
@@ -122,8 +119,7 @@ class ProductCubit extends Cubit<ProductStates> {
       for (var element in values.docs) {
         products.add(ProductModel.fromJson(element.data()));
       }
-       emit(GetProductSuccessState());
-
+      emit(GetProductSuccessState());
     }).catchError((error) {
       emit(GetProductFailureState(error: error.toString()));
     });
@@ -213,5 +209,52 @@ class ProductCubit extends Cubit<ProductStates> {
     }).catchError((error) {
       emit(ChangeOrderStatusFailureState(error: error.toString()));
     });
+  }
+
+  void updateProduct({
+    required String productID,
+    required ProductModel originalProduct,
+    required ProductModel updatedProduct,
+  })  async{
+    emit(UpdateProductsLoadingState());
+
+    // To only Send The Changed Field
+    Map<String, dynamic> updatedFields = {};
+    if (updatedProduct.name != originalProduct.name) {
+      updatedFields['name'] = updatedProduct.name;
+    }
+    if (updatedProduct.description != originalProduct.description) {
+      updatedFields['description'] = updatedProduct.description;
+    }
+    if (updatedProduct.price != originalProduct.price) {
+      updatedFields['price'] = updatedProduct.price;
+    }
+    if (updatedProduct.imageUrl != originalProduct.imageUrl) {
+      updatedFields['imageUrl'] = updatedProduct.imageUrl;
+    }
+    if (updatedProduct.category != originalProduct.category) {
+      updatedFields['category'] = updatedProduct.category;
+    }
+    if (updatedProduct.brand != originalProduct.brand) {
+      updatedFields['brand'] = updatedProduct.brand;
+    }
+    if (updatedProduct.offer != originalProduct.offer) {
+      updatedFields['offer'] = updatedProduct.offer;
+    }
+    if (updatedFields.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection(kProductsCollection)
+          .doc(productID)
+          .update(updatedFields)
+          .then((_) {
+        var index = products.indexWhere((element) => element.id == productID);
+        if (index != -1) {
+          products[index] = updatedProduct;
+          emit(UpdateProductsSuccessState(products: products));
+        }
+      }).catchError((error) {
+        emit(UpdateProductsFailureState(error: error.toString()));
+      });
+    }
   }
 }
