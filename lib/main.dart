@@ -5,6 +5,7 @@ import 'package:footwear_store_admin/presentation/controller/product_cubit.dart'
 import 'package:footwear_store_admin/presentation/screens/home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'core/utils/bloc_observer.dart';
+import 'data/models/product_model.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -13,7 +14,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Bloc.observer = MyBlocObserver();
-  runApp(const FootWearStore());
+
+  runApp( FootWearStore());
 }
 
 class FootWearStore extends StatelessWidget {
@@ -22,6 +24,7 @@ class FootWearStore extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return BlocProvider(
       create: (context) => ProductCubit()..fetchAllProducts()..getOrders(),
       child: MaterialApp(

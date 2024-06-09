@@ -305,8 +305,8 @@ class OrderCard extends StatelessWidget {
                   ),
                   Text(
                       order.isShipped
-                          ? 'Order Shipped Successfully! 😁'
-                          : 'Order has not been shipped! ☹️',
+                          ? 'Order Shipped Successfully! '
+                          : 'Order has not been shipped! ',
                       style: TextStyle(
                           color: order.isShipped ? Colors.green : Colors.red,
                           fontSize: 18,

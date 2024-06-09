@@ -74,7 +74,7 @@ class CustomSnackBarOverlay {
     required String message,
     required messageDescription,
     msgColor,
-    Duration duration = const Duration(seconds: 5),
+    Duration duration = const Duration(seconds: 1),
   }) {
     if (_overlayEntry != null) {
       hide();

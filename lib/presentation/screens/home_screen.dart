@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:footwear_store_admin/data/models/product_model.dart';
 import 'package:footwear_store_admin/presentation/controller/product_cubit.dart';
 import 'package:footwear_store_admin/presentation/widgets/custom_snack_bar.dart';
+import 'package:footwear_store_admin/styles.dart';
+import '../../const.dart';
 import '../widgets/home_screen_widgets/add_product_card.dart';
 import '../widgets/home_screen_widgets/home_products_grid_view.dart';
 import '../widgets/home_screen_widgets/order_card.dart';
 
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -27,7 +32,6 @@ class HomeScreen extends StatelessWidget {
         },
         builder: (context, state) {
           var cubit = BlocProvider.of<ProductCubit>(context);
-          List<ProductModel> products = cubit.products;
           return RefreshIndicator(
             onRefresh: () async {
               cubit.fetchAllProducts();
@@ -49,9 +53,11 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    if (state is! GetProductLoadingState ||
-                        state is! GetOrdersLoadingState)
-                      HomeProductsGridView(products: products),
+                    if (state is GetOrdersLoadingState)
+                      const CircularProgressIndicator(color: AppStyles.kPrimaryColor),
+                    if (state is GetProductLoadingState && products.isEmpty)
+                      const CircularProgressIndicator(color: AppStyles.kPrimaryColor),
+                    HomeProductsGridView(products: products),
                   ],
                 ),
               ),
