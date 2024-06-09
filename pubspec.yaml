@@ -46,6 +46,8 @@ dependencies:
   fancy_shimmer_image: ^2.0.3
   flutter_bloc: ^8.1.5
   firebase_storage: ^11.7.7
+  animated_text_kit: ^4.2.2
+
 
 dev_dependencies:
   flutter_test:
