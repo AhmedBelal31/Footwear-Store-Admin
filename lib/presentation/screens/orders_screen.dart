@@ -1,4 +1,3 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footwear_store_admin/presentation/controller/product_cubit.dart';
@@ -7,9 +6,9 @@ import '../widgets/orders_screen_widgets/fulfilled_orders_animated_text.dart';
 import '../widgets/orders_screen_widgets/order_list_view_item.dart';
 
 class OrdersScreen extends StatefulWidget {
-  final List<OrderProductModel> orders;
 
-  const OrdersScreen({super.key, required this.orders});
+
+  const OrdersScreen({super.key,});
 
   @override
   OrdersScreenState createState() => OrdersScreenState();
@@ -18,6 +17,7 @@ class OrdersScreen extends StatefulWidget {
 class OrdersScreenState extends State<OrdersScreen> {
   @override
   void initState() {
+    BlocProvider.of<ProductCubit>(context).getUnShippedOrders();
     super.initState();
   }
 
@@ -27,9 +27,10 @@ class OrdersScreenState extends State<OrdersScreen> {
       appBar: buildAppBar(),
       body: BlocBuilder<ProductCubit, ProductStates>(
         builder: (context, state) {
+          List<OrderProductModel> unShippedOrders =  BlocProvider.of<ProductCubit>(context).unShippedOrders;
           return RefreshIndicator(
             onRefresh: () async {
-              BlocProvider.of<ProductCubit>(context).getOrders();
+              BlocProvider.of<ProductCubit>(context).getUnShippedOrders();
               setState(() {});
             },
             child: SingleChildScrollView(
@@ -37,17 +38,17 @@ class OrdersScreenState extends State<OrdersScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
-                  FulfilledOrders(orders: widget.orders),
+                  const FulfilledOrders(),
                   const SizedBox(height: 30),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return OrdersListViewItem(
-                        order: widget.orders[index],
+                        order:unShippedOrders[index],
                       );
                     },
-                    itemCount: widget.orders.length,
+                    itemCount:unShippedOrders.length,
                   ),
                 ],
               ),

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../controller/product_cubit.dart';
 import '../../screens/orders_screen.dart';
 
 class OrderCard extends StatelessWidget {
@@ -14,9 +12,7 @@ class OrderCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => OrdersScreen(
-              orders: BlocProvider.of<ProductCubit>(context).orders,
-            ),
+            builder: (context) => const OrdersScreen(),
           ),
         );
       },

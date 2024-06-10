@@ -1,12 +1,11 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import '../../../data/models/order_product_model.dart';
 import 'fulfilled_orders_screen.dart';
 
 class FulfilledOrders extends StatelessWidget {
-  final List<OrderProductModel> orders;
-
-  const FulfilledOrders({super.key, required this.orders});
+  const FulfilledOrders({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +13,11 @@ class FulfilledOrders extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => FulfilledOrdersScreen(orders: orders),
+            builder: (context) => const FulfilledOrdersScreen(),
           ),
         );
       },
-      child: FulfilledOrdersAnimatedText(orders: orders),
+      child: const FulfilledOrdersAnimatedText(),
     );
   }
 }
@@ -26,10 +25,7 @@ class FulfilledOrders extends StatelessWidget {
 class FulfilledOrdersAnimatedText extends StatelessWidget {
   const FulfilledOrdersAnimatedText({
     super.key,
-    required this.orders,
   });
-
-  final List<OrderProductModel> orders;
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +34,7 @@ class FulfilledOrdersAnimatedText extends StatelessWidget {
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.green,
-        borderRadius: BorderRadius.circular(12.0),
-      ),
+      decoration: buildBoxDecoration(),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: DefaultTextStyle(
@@ -49,22 +42,33 @@ class FulfilledOrdersAnimatedText extends StatelessWidget {
             fontSize: 20.0,
             color: Colors.white,
           ),
-          child: AnimatedTextKit(
-            animatedTexts: [
-              WavyAnimatedText('Fulfilled Orders'),
-            ],
-            isRepeatingAnimation: true,
-            repeatForever: true,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => FulfilledOrdersScreen(orders: orders),
-                ),
-              );
-            },
-          ),
+          child: buildAnimatedTextKit(context),
         ),
       ),
+    );
+  }
+
+  AnimatedTextKit buildAnimatedTextKit(BuildContext context) {
+    return AnimatedTextKit(
+      animatedTexts: [
+        WavyAnimatedText('Fulfilled Orders'),
+      ],
+      isRepeatingAnimation: true,
+      repeatForever: true,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => FulfilledOrdersScreen(),
+          ),
+        );
+      },
+    );
+  }
+
+  BoxDecoration buildBoxDecoration() {
+    return BoxDecoration(
+      color: Colors.green,
+      borderRadius: BorderRadius.circular(12.0),
     );
   }
 }
