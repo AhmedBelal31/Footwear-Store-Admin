@@ -94,6 +94,29 @@ class ChangeOrderStatusFailureState extends ProductStates {
 }
 
 
+
+///Update UnShipped Orders
+class GetUnShippedOrdersLoadingState extends ProductStates {}
+
+class GetUnShippedOrdersSuccessState extends ProductStates {}
+
+class GetUnShippedOrdersFailureState extends ProductStates {
+  final String error;
+
+  GetUnShippedOrdersFailureState({required this.error});
+}
+///Update Shipped Orders
+class GetShippedOrdersLoadingState extends ProductStates {}
+
+class GetShippedOrdersSuccessState extends ProductStates {}
+
+class GetShippedOrdersFailureState extends ProductStates {
+  final String error;
+
+  GetShippedOrdersFailureState({required this.error});
+}
+
+
 ///Update Products
 class UpdateProductsLoadingState extends ProductStates {}
 

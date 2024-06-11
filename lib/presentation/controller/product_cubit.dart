@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../../const.dart';
 import '../../data/models/order_product_model.dart';
+
 part 'product_states.dart';
 
 class ProductCubit extends Cubit<ProductStates> {
@@ -22,6 +23,10 @@ class ProductCubit extends Cubit<ProductStates> {
 
   File? productImageFile;
   String? productImageUrl;
+
+
+  List<OrderProductModel> unShippedOrders = [];
+  List<OrderProductModel> shippedOrders = [];
 
   void changeDropDownButtonCategory(String? value) {
     selectedCategory = value;
@@ -108,7 +113,7 @@ class ProductCubit extends Cubit<ProductStates> {
     });
   }
 
-  void fetchAllProducts()  {
+  void fetchAllProducts() {
     emit(GetProductLoadingState());
     FirebaseFirestore.instance
         .collection(kProductsCollection)
@@ -179,24 +184,24 @@ class ProductCubit extends Cubit<ProductStates> {
 
   List<OrderProductModel> orders = [];
 
-  void getOrders() {
-    emit(GetOrdersLoadingState());
-    FirebaseFirestore.instance
-        .collection(kOrdersCollection)
-        .get()
-        .then((values) {
-      orders.clear();
-      orders.addAll(
-        values.docs
-            .map((element) => OrderProductModel.fromJson(element.data()))
-            .toList(),
-      );
-
-      emit(GetOrdersSuccessState());
-    }).catchError((error) {
-      emit(GetProductFailureState(error: error.toString()));
-    });
-  }
+  // void getOrders() {
+  //   emit(GetOrdersLoadingState());
+  //   FirebaseFirestore.instance
+  //       .collection(kOrdersCollection)
+  //       .get()
+  //       .then((values) {
+  //     orders.clear();
+  //     orders.addAll(
+  //       values.docs
+  //           .map((element) => OrderProductModel.fromJson(element.data()))
+  //           .toList(),
+  //     );
+  //
+  //     emit(GetOrdersSuccessState());
+  //   }).catchError((error) {
+  //     emit(GetProductFailureState(error: error.toString()));
+  //   });
+  // }
 
   void updateOrderStatusValue(
       {required String orderID, required bool isShipped}) {
@@ -211,11 +216,65 @@ class ProductCubit extends Cubit<ProductStates> {
     });
   }
 
+
+
+  // void getShippedOrders({required String productId}) {
+  //   FirebaseFirestore.instance
+  //       .collection(kOrdersCollection)
+  //       .where('isShipped', isEqualTo: true)
+  //       .get()
+  //       .then((values) {
+  //     for (var doc in values.docs) {
+  //       shippedOrders.add(OrderProductModel.fromJson(doc.data()));
+  //     }
+  //     // Do something with the shippedOrders list
+  //   })
+  //       .catchError((error) {
+  //     // Handle any errors here
+  //     print("Failed to get shipped orders: $error");
+  //   });
+  // }
+
+  void getUnShippedOrders() {
+    emit(GetUnShippedOrdersLoadingState());
+    FirebaseFirestore.instance
+        .collection(kOrdersCollection)
+        .where('isShipped', isEqualTo: false)
+        .get()
+        .then((values) {
+      unShippedOrders.clear();
+      for (var doc in values.docs) {
+        unShippedOrders.add(OrderProductModel.fromJson(doc.data()));
+      }
+
+      emit(GetUnShippedOrdersSuccessState());
+    }).catchError((error) {
+      emit(GetUnShippedOrdersFailureState(error: error.toString()));
+    });
+  }
+
+  void getShippedOrders() {
+    emit(GetShippedOrdersLoadingState());
+    FirebaseFirestore.instance
+        .collection(kOrdersCollection)
+        .where('isShipped', isEqualTo: true)
+        .get()
+        .then((values) {
+      shippedOrders.clear();
+      for (var doc in values.docs) {
+        shippedOrders.add(OrderProductModel.fromJson(doc.data()));
+      }
+      emit(GetShippedOrdersSuccessState());
+    }).catchError((error) {
+      emit(GetOrdersSuccessState());
+    });
+  }
+
   void updateProduct({
     required String productID,
     required ProductModel originalProduct,
     required ProductModel updatedProduct,
-  })  async{
+  }) async {
     emit(UpdateProductsLoadingState());
 
     // To only Send The Changed Field
