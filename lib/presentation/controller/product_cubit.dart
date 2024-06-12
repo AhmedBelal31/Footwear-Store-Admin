@@ -316,4 +316,40 @@ class ProductCubit extends Cubit<ProductStates> {
       });
     }
   }
+
+
+  void deleteOrder({required String orderId}) {
+    emit(DeleteOrderLoadingState());
+    FirebaseFirestore.instance
+        .collection(kOrdersCollection)
+        .doc(orderId)
+        .delete()
+        .then((_) {
+      emit(DeleteOrderSuccessState());
+      getShippedOrders();
+      getUnShippedOrders();
+    }).catchError((error) {
+      emit(DeleteOrderFailureState(error: error.toString()));
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+
+
+
