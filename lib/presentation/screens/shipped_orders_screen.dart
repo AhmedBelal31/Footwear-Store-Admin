@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footwear_store_admin/presentation/controller/product_cubit.dart';
 import 'package:footwear_store_admin/presentation/widgets/custom_orders_details_list_view_item.dart';
+import 'package:footwear_store_admin/styles.dart';
 import '../../data/models/order_product_model.dart';
 import '../widgets/custom_snack_bar.dart';
 import '../widgets/no_data_message.dart';
-
 
 class ShippedOrdersScreen extends StatefulWidget {
   const ShippedOrdersScreen({super.key});
@@ -28,10 +28,17 @@ class ShippedOrdersScreenState extends State<ShippedOrdersScreen> {
       body: BlocBuilder<ProductCubit, ProductStates>(
         builder: (context, state) {
           final List<OrderProductModel> shippedOrders =
-              BlocProvider
-                  .of<ProductCubit>(context)
-                  .shippedOrders;
-          if (shippedOrders.isNotEmpty) {
+              BlocProvider.of<ProductCubit>(context).shippedOrders;
+          if (shippedOrders.isEmpty && state is! GetShippedOrdersLoadingState) {
+            return const NoDataMessage(
+                message: "No orders available at the moment.");
+          } else if (state is GetShippedOrdersLoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppStyles.kPrimaryColor,
+              ),
+            );
+          } else {
             return RefreshIndicator(
               onRefresh: () async {
                 BlocProvider.of<ProductCubit>(context).getShippedOrders();
@@ -41,9 +48,8 @@ class ShippedOrdersScreenState extends State<ShippedOrdersScreen> {
                 padding: const EdgeInsets.only(top: 30),
                 itemBuilder: (context, index) {
                   return CustomOrdersDetailsListViewItem(
-                    order: shippedOrders[index] ,
-                      onChangedOfCheckBox:(value)
-                      {
+                      order: shippedOrders[index],
+                      onChangedOfCheckBox: (value) {
                         if (value != null) {
                           BlocProvider.of<ProductCubit>(context)
                               .updateOrderStatusValue(
@@ -57,7 +63,7 @@ class ShippedOrdersScreenState extends State<ShippedOrdersScreen> {
                               context,
                               message: 'Order Shipped',
                               messageDescription:
-                              'The order has been marked as shipped.',
+                                  'The order has been marked as shipped.',
                               msgColor: Colors.green,
                             );
                           } else {
@@ -65,22 +71,17 @@ class ShippedOrdersScreenState extends State<ShippedOrdersScreen> {
                               context,
                               message: 'Order Not Shipped',
                               messageDescription:
-                              'The order has been marked as not shipped.',
+                                  'The order has been marked as not shipped.',
                               msgColor: Colors.red,
                             );
                           }
                         }
-                      }
-                  );
+                      });
                 },
                 itemCount: shippedOrders.length,
               ),
             );
           }
-          else
-            {
-              return const NoDataMessage(message: "No orders available at the moment.");
-            }
         },
       ),
     );
@@ -101,6 +102,3 @@ class ShippedOrdersScreenState extends State<ShippedOrdersScreen> {
     );
   }
 }
-
-
-
