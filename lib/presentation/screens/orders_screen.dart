@@ -82,6 +82,7 @@ import 'package:footwear_store_admin/presentation/controller/product_cubit.dart'
 import 'package:footwear_store_admin/presentation/widgets/custom_orders_details_list_view_item.dart';
 import '../../data/models/order_product_model.dart';
 import '../widgets/custom_snack_bar.dart';
+import '../widgets/no_data_message.dart';
 import '../widgets/orders_screen_widgets/shipped_orders_animated_text.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -110,60 +111,72 @@ class OrdersScreenState extends State<OrdersScreen> {
         builder: (context, state) {
           List<OrderProductModel> unShippedOrders =
               BlocProvider.of<ProductCubit>(context).unShippedOrders;
-          return RefreshIndicator(
-            onRefresh: _refreshOrders,
-            child: CustomScrollView(
-              slivers: [
-                const SliverToBoxAdapter(
-                  child: ShippedOrders(),
-                ),
-                SliverList.builder(
-                  itemBuilder: (context, index) {
-                    // return UnShippedOrdersListViewItem(
-                    //   key: UniqueKey(),
-                    //   order: unShippedOrders[index],
-                    //   onStatusChanged: _refreshOrders,
-                    // );
+          if (unShippedOrders.isNotEmpty) {
+            return RefreshIndicator(
+              onRefresh: _refreshOrders,
+              child: CustomScrollView(
+                slivers: [
+                  const SliverToBoxAdapter(
+                    child: ShippedOrders(),
+                  ),
+                  SliverList.builder(
+                    itemBuilder: (context, index) {
+                      // return UnShippedOrdersListViewItem(
+                      //   key: UniqueKey(),
+                      //   order: unShippedOrders[index],
+                      //   onStatusChanged: _refreshOrders,
+                      // );
 
-                    return CustomOrdersDetailsListViewItem(
-                      order: unShippedOrders[index],
-                      onChangedOfCheckBox:(value){
-                        if(value !=null)
-                          {
+                      return CustomOrdersDetailsListViewItem(
+                        order: unShippedOrders[index],
+                        onChangedOfCheckBox: (value) {
+                          if (value != null) {
                             setState(() {
                               unShippedOrders[index].isShipped = value;
-                              BlocProvider.of<ProductCubit>(context).updateOrderStatusValue(
+                              BlocProvider.of<ProductCubit>(context)
+                                  .updateOrderStatusValue(
                                 orderID: unShippedOrders[index].orderId,
                                 isShipped: value,
                               );
-                              BlocProvider.of<ProductCubit>(context).getUnShippedOrders();
+                              BlocProvider.of<ProductCubit>(context)
+                                  .getUnShippedOrders();
                               if (value) {
                                 CustomSnackBarOverlay.show(
                                   context,
                                   message: 'Order Shipped',
-                                  messageDescription: 'The order has been marked as shipped.',
+                                  messageDescription:
+                                      'The order has been marked as shipped.',
                                   msgColor: Colors.green,
                                 );
-                              }
-                              else {
+                              } else {
                                 CustomSnackBarOverlay.show(
                                   context,
                                   message: 'Order Not Shipped',
-                                  messageDescription: 'The order has been marked as not shipped.',
+                                  messageDescription:
+                                      'The order has been marked as not shipped.',
                                   msgColor: Colors.red,
                                 );
                               }
                             });
                           }
-
-                      },
-                    );
-                  },
-                  itemCount: unShippedOrders.length,
-                )
+                        },
+                      );
+                    },
+                    itemCount: unShippedOrders.length,
+                  )
+                ],
+              ),
+            );
+          } else {
+            return const Column(
+              children: [
+                ShippedOrders(),
+                Spacer(),
+                NoDataMessage(message: "No orders available at the moment."),
+                Spacer(),
               ],
-            ),
-          );
+            );
+          }
         },
       ),
     );
