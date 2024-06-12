@@ -81,6 +81,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:footwear_store_admin/presentation/controller/product_cubit.dart';
 import 'package:footwear_store_admin/presentation/widgets/custom_orders_details_list_view_item.dart';
 import '../../data/models/order_product_model.dart';
+import '../../styles.dart';
 import '../widgets/custom_snack_bar.dart';
 import '../widgets/no_data_message.dart';
 import '../widgets/orders_screen_widgets/shipped_orders_animated_text.dart';
@@ -111,7 +112,23 @@ class OrdersScreenState extends State<OrdersScreen> {
         builder: (context, state) {
           List<OrderProductModel> unShippedOrders =
               BlocProvider.of<ProductCubit>(context).unShippedOrders;
-          if (unShippedOrders.isNotEmpty) {
+          if (unShippedOrders.isEmpty &&
+              state is! GetUnShippedOrdersLoadingState) {
+            return const Column(
+              children: [
+                ShippedOrders(),
+                Spacer(),
+                NoDataMessage(message: "No orders available at the moment."),
+                Spacer(),
+              ],
+            );
+          } else if (state is GetUnShippedOrdersLoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppStyles.kPrimaryColor,
+              ),
+            );
+          } else {
             return RefreshIndicator(
               onRefresh: _refreshOrders,
               child: CustomScrollView(
@@ -166,15 +183,6 @@ class OrdersScreenState extends State<OrdersScreen> {
                   )
                 ],
               ),
-            );
-          } else {
-            return const Column(
-              children: [
-                ShippedOrders(),
-                Spacer(),
-                NoDataMessage(message: "No orders available at the moment."),
-                Spacer(),
-              ],
             );
           }
         },
