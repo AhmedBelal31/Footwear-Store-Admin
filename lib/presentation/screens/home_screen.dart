@@ -7,6 +7,7 @@ import '../../const.dart';
 import '../widgets/home_screen_widgets/add_product_card.dart';
 import '../widgets/home_screen_widgets/home_products_grid_view.dart';
 import '../widgets/home_screen_widgets/order_card.dart';
+import '../widgets/no_data_message.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,37 +33,56 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         builder: (context, state) {
           var cubit = BlocProvider.of<ProductCubit>(context);
-          return RefreshIndicator(
-            onRefresh: () async {
-              cubit.fetchAllProducts();
-            },
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: screenHeight),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    const Row(
-                      children: [
-                        SizedBox(width: 10),
-                        Expanded(child: OrderCard()),
-                        SizedBox(width: 20),
-                        Expanded(child: AddProductCard()),
-                        SizedBox(width: 10),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    if (state is GetOrdersLoadingState)
-                      const CircularProgressIndicator(color: AppStyles.kPrimaryColor),
-                    if (state is GetProductLoadingState && products.isEmpty)
-                      const CircularProgressIndicator(color: AppStyles.kPrimaryColor),
-                    HomeProductsGridView(products: products),
-                  ],
+          if (products.isNotEmpty) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                cubit.fetchAllProducts();
+              },
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: screenHeight),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      const Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Expanded(child: OrderCard()),
+                          SizedBox(width: 20),
+                          Expanded(child: AddProductCard()),
+                          SizedBox(width: 10),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      if (state is GetProductLoadingState && products.isEmpty)
+                        const CircularProgressIndicator(
+                            color: AppStyles.kPrimaryColor),
+                      HomeProductsGridView(products: products),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
+            );
+          } else {
+            return const Column(
+              children: [
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    SizedBox(width: 10),
+                    Expanded(child: OrderCard()),
+                    SizedBox(width: 20),
+                    Expanded(child: AddProductCard()),
+                    SizedBox(width: 10),
+                  ],
+                ),
+                Spacer(),
+                NoDataMessage(message: "No Products available at the moment."),
+                Spacer(),
+              ],
+            );
+          }
         },
       ),
     );
