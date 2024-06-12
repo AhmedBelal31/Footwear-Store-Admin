@@ -22,13 +22,13 @@ class AlertDialogDeleteOrderState extends State<AlertDialogDeleteOrder> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context)
-                .pop(false); // Return false to cancel dismissal
+            Navigator.of(context).pop(false); // Return false to cancel dismissal
           },
           child: const Text('Cancel'),
         ),
         TextButton(
           onPressed: () {
+
             ///Delete Order ..
             Navigator.of(context).pop(true); // Return true to confirm dismissal
           },
