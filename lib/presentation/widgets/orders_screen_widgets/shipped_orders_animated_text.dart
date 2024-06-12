@@ -1,9 +1,9 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'fulfilled_orders_screen.dart';
+import '../../screens/shipped_orders_screen.dart';
 
-class FulfilledOrders extends StatelessWidget {
-  const FulfilledOrders({
+class ShippedOrders extends StatelessWidget {
+  const ShippedOrders({
     super.key,
   });
 
@@ -13,17 +13,17 @@ class FulfilledOrders extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const FulfilledOrdersScreen(),
+            builder: (context) => const ShippedOrdersScreen(),
           ),
         );
       },
-      child: const FulfilledOrdersAnimatedText(),
+      child: const ShippedOrdersAnimatedText(),
     );
   }
 }
 
-class FulfilledOrdersAnimatedText extends StatelessWidget {
-  const FulfilledOrdersAnimatedText({
+class ShippedOrdersAnimatedText extends StatelessWidget {
+  const ShippedOrdersAnimatedText({
     super.key,
   });
 
@@ -58,7 +58,7 @@ class FulfilledOrdersAnimatedText extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => FulfilledOrdersScreen(),
+            builder: (context) => const ShippedOrdersScreen(),
           ),
         );
       },

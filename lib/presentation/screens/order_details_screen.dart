@@ -66,10 +66,10 @@ class OrderDetailsScreen extends StatelessWidget {
               const SizedBox(height: 40),
               if (order.isShipped == true)
                 buildStatusContainer(
-                    'Order Shipped Successfully ! 😁', Colors.green)
+                    'Order Shipped Successfully ! ', Colors.green)
               else
                 buildStatusContainer(
-                    'Order has not been shipped! ☹️', Colors.red),
+                    'Order has not been shipped! ', Colors.red),
             ],
           ),
         ),

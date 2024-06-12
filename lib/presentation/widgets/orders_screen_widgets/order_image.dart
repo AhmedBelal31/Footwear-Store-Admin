@@ -1,14 +1,13 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
-import 'order_list_view_item.dart';
 
 class OrderImage extends StatelessWidget {
   const OrderImage({
     super.key,
-    required this.widget,
+    required this.productImageUrl,
   });
 
-  final OrdersListViewItem widget;
+  final String productImageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,7 @@ class OrderImage extends StatelessWidget {
       child: FancyShimmerImage(
         width: 120,
         height: 120,
-        imageUrl: widget.order.productImageUrl,
+        imageUrl: productImageUrl,
         errorWidget: Image.network(
             'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png'),
       ),
