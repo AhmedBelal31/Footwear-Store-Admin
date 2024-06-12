@@ -130,3 +130,16 @@ class UpdateProductsFailureState extends ProductStates {
 
   UpdateProductsFailureState({required this.error});
 }
+
+
+
+///Delete Order
+class DeleteOrderLoadingState extends ProductStates {}
+
+class DeleteOrderSuccessState extends ProductStates {}
+
+class DeleteOrderFailureState extends ProductStates {
+  final String error;
+
+  DeleteOrderFailureState({required this.error});
+}
