@@ -4,6 +4,7 @@ import 'package:footwear_store_admin/presentation/controller/product_cubit.dart'
 import 'package:footwear_store_admin/presentation/widgets/custom_orders_details_list_view_item.dart';
 import '../../data/models/order_product_model.dart';
 import '../widgets/custom_snack_bar.dart';
+import '../widgets/no_data_message.dart';
 
 
 class ShippedOrdersScreen extends StatefulWidget {
@@ -30,50 +31,56 @@ class ShippedOrdersScreenState extends State<ShippedOrdersScreen> {
               BlocProvider
                   .of<ProductCubit>(context)
                   .shippedOrders;
-          return RefreshIndicator(
-            onRefresh: () async {
-              BlocProvider.of<ProductCubit>(context).getShippedOrders();
-              setState(() {});
-            },
-            child: ListView.builder(
-              padding: const EdgeInsets.only(top: 30),
-              itemBuilder: (context, index) {
-                return CustomOrdersDetailsListViewItem(
-                  order: shippedOrders[index] ,
-                    onChangedOfCheckBox:(value)
-                    {
-                      if (value != null) {
-                        BlocProvider.of<ProductCubit>(context)
-                            .updateOrderStatusValue(
-                          orderID: shippedOrders[index].orderId,
-                          isShipped: value,
-                        );
-                        BlocProvider.of<ProductCubit>(context)
-                            .getShippedOrders();
-                        if (value) {
-                          CustomSnackBarOverlay.show(
-                            context,
-                            message: 'Order Shipped',
-                            messageDescription:
-                            'The order has been marked as shipped.',
-                            msgColor: Colors.green,
+          if (shippedOrders.isNotEmpty) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                BlocProvider.of<ProductCubit>(context).getShippedOrders();
+                setState(() {});
+              },
+              child: ListView.builder(
+                padding: const EdgeInsets.only(top: 30),
+                itemBuilder: (context, index) {
+                  return CustomOrdersDetailsListViewItem(
+                    order: shippedOrders[index] ,
+                      onChangedOfCheckBox:(value)
+                      {
+                        if (value != null) {
+                          BlocProvider.of<ProductCubit>(context)
+                              .updateOrderStatusValue(
+                            orderID: shippedOrders[index].orderId,
+                            isShipped: value,
                           );
-                        } else {
-                          CustomSnackBarOverlay.show(
-                            context,
-                            message: 'Order Not Shipped',
-                            messageDescription:
-                            'The order has been marked as not shipped.',
-                            msgColor: Colors.red,
-                          );
+                          BlocProvider.of<ProductCubit>(context)
+                              .getShippedOrders();
+                          if (value) {
+                            CustomSnackBarOverlay.show(
+                              context,
+                              message: 'Order Shipped',
+                              messageDescription:
+                              'The order has been marked as shipped.',
+                              msgColor: Colors.green,
+                            );
+                          } else {
+                            CustomSnackBarOverlay.show(
+                              context,
+                              message: 'Order Not Shipped',
+                              messageDescription:
+                              'The order has been marked as not shipped.',
+                              msgColor: Colors.red,
+                            );
+                          }
                         }
                       }
-                    }
-                );
-              },
-              itemCount: shippedOrders.length,
-            ),
-          );
+                  );
+                },
+                itemCount: shippedOrders.length,
+              ),
+            );
+          }
+          else
+            {
+              return const NoDataMessage(message: "No orders available at the moment.");
+            }
         },
       ),
     );
