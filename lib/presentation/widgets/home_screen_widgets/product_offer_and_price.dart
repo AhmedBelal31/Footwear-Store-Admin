@@ -43,8 +43,7 @@ class ProductOfferAndPrice extends StatelessWidget {
           onTap: () {
             buildAwesomeDialogWarning(context,
                 title: 'Delete Product',
-                message:
-                    'Warning! Deleting this product is permanent. \n Are you absolutely sure?',
+                message: 'Warning! Deleting this product is permanent. \n Are you absolutely sure?',
                 btnOkOnPress: () {
               BlocProvider.of<ProductCubit>(context)
                   .deleteProduct(productId: product.id);

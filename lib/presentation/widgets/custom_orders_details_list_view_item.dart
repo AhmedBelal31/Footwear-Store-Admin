@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../core/utils/build_awesome_dialog_warning.dart';
 import '../../data/models/order_product_model.dart';
 import '../../styles.dart';
+import '../controller/product_cubit.dart';
 import '../screens/order_details_screen.dart';
 import 'orders_screen_widgets/Order_price.dart';
 import 'orders_screen_widgets/alert_dialog_delete_order.dart';
@@ -23,14 +26,22 @@ class CustomOrdersDetailsListViewItem  extends StatelessWidget {
       direction: DismissDirection.endToStart,
       background: buildDismissibleDecoration(),
       confirmDismiss: (direction) async {
-        return await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialogDeleteOrder(
-              order: order,
-            );
-          },
-        );
+        // return await showDialog(
+        //   context: context,
+        //   builder: (BuildContext context) {
+        //     return AlertDialogDeleteOrder(
+        //       order: order,
+        //     );
+        //   },
+        // );
+        buildAwesomeDialogWarning(context,
+            title: 'Delete Order',
+            message:
+            'Warning! Deleting this Order is permanent. \n Are you absolutely sure?',
+            btnOkOnPress: () {
+              BlocProvider.of<ProductCubit>(context).deleteOrder(orderId: order.orderId);
+
+            }, btnCancelOnPress: () {});
       },
       onDismissed: (direction) {
         // Delete the order

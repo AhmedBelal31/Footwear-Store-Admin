@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../../screens/add_product_screen.dart';
 
 class AddProductCard extends StatelessWidget {
@@ -30,6 +31,12 @@ class AddProductCard extends StatelessWidget {
               size: 50,
               color: Colors.blue,
             ),
+            // Lottie.asset(
+            //   'assets/images/add_to_cart_2.json',
+            //   // width: 100,
+            //   height: 100,
+            //   fit: BoxFit.fitHeight,
+            // ),
             SizedBox(height: 10),
             Text(
               'Add Product',

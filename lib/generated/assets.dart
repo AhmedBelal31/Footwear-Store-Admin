@@ -2,6 +2,8 @@
 class Assets {
   Assets._();
 
+  static const String imagesAddToCart = 'assets/images/add_to_cart.json';
+  static const String imagesAddToCart2 = 'assets/images/add_to_cart_2.json';
   static const String imagesAppIcon = 'assets/images/app_icon.png';
   static const String imagesWarning = 'assets/images/warning.json';
 
