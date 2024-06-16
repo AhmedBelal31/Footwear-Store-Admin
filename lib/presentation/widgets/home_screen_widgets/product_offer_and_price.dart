@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/utils/build_awesome_dialog_warning.dart';
 import '../../../data/models/product_model.dart';
 import '../../controller/product_cubit.dart';
 
@@ -40,8 +41,14 @@ class ProductOfferAndPrice extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            BlocProvider.of<ProductCubit>(context)
-                .deleteProduct(productId: product.id);
+            buildAwesomeDialogWarning(context,
+                title: 'Delete Product',
+                message:
+                    'Warning! Deleting this product is permanent. \n Are you absolutely sure?',
+                btnOkOnPress: () {
+              BlocProvider.of<ProductCubit>(context)
+                  .deleteProduct(productId: product.id);
+            }, btnCancelOnPress: () {});
           },
           child: const CircleAvatar(
             backgroundColor: Colors.red,
