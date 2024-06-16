@@ -15,7 +15,7 @@ void main() async {
   );
   Bloc.observer = MyBlocObserver();
 
-  runApp( FootWearStore());
+  runApp( const FootWearStore());
 }
 
 class FootWearStore extends StatelessWidget {
@@ -26,7 +26,7 @@ class FootWearStore extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return BlocProvider(
-      create: (context) => ProductCubit()..fetchAllProducts()..getOrders(),
+      create: (context) => ProductCubit()..fetchAllProducts(),
       child: MaterialApp(
         title: 'FootWear Store',
         theme: ThemeData(
