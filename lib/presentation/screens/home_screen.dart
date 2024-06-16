@@ -30,10 +30,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 messageDescription: 'Product Deleted Successfully',
                 msgColor: Colors.red);
           }
+          if (state is GetProductFailureState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: SnackBar(
+                  content: Text('Error ${state.error}'),
+                ),
+              ),
+            );
+          }
         },
         builder: (context, state) {
           var cubit = BlocProvider.of<ProductCubit>(context);
-          if (products.isNotEmpty) {
+          if (products.isEmpty && state is! GetProductLoadingState) {
+            return const Column(
+              children: [
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    SizedBox(width: 10),
+                    Expanded(child: OrderCard()),
+                    SizedBox(width: 20),
+                    Expanded(child: AddProductCard()),
+                    SizedBox(width: 10),
+                  ],
+                ),
+                Spacer(),
+                NoDataMessage(message: "No Products available at the moment."),
+                Spacer(),
+              ],
+            );
+          } else {
             return RefreshIndicator(
               onRefresh: () async {
                 cubit.fetchAllProducts();
@@ -63,24 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-            );
-          } else {
-            return const Column(
-              children: [
-                SizedBox(height: 20),
-                Row(
-                  children: [
-                    SizedBox(width: 10),
-                    Expanded(child: OrderCard()),
-                    SizedBox(width: 20),
-                    Expanded(child: AddProductCard()),
-                    SizedBox(width: 10),
-                  ],
-                ),
-                Spacer(),
-                NoDataMessage(message: "No Products available at the moment."),
-                Spacer(),
-              ],
             );
           }
         },
