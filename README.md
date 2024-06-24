@@ -173,7 +173,7 @@ To get started with ShoesHub, follow these steps:
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/AhmedBelal31/shoesHub.git](https://github.com/AhmedBelal31/Footwear-Store-Client)
+   git clone https://github.com/AhmedBelal31/Footwear-Store-Admin
    cd shoesHub
    ```
 
