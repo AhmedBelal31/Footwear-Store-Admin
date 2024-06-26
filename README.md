@@ -11,13 +11,15 @@ ShoesHub is a comprehensive Flutter application designed for footwear stores. It
 - **User Registration:** Users can register an account with their email and phone number.
 - **Password Reset:** Users can reset their password by receiving a reset link in their email via Firebase.
 <hr>
-
+<hr>
 <hr>
 
 # Click Here  [See Videos](#videos-for-app) 🖱️
 
 <hr>
 <hr>
+<hr>
+
  # 📱 Screens And Video 🎥
 
 |  App Icon | Splash Screen |
